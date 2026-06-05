@@ -1,0 +1,3 @@
+cloakbrowser==0.3.31
+PyYAML==6.0.3
+selenium==4.44.0
