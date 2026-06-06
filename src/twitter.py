@@ -7,9 +7,15 @@ import traceback
 import yaml
 
 
+
+# Undifined Variable
 # pylint: disable=E0602
 
+# Too general exception
+# pylint: disable=W0718
+
 class TwitterBot():
+    """Main class"""
     def __init__(self):
         self.browser = launch(geoip=True,headless=False,humanize=True)
         self.page = self.browser.new_page(viewport=None)
@@ -17,7 +23,7 @@ class TwitterBot():
             self.data = yaml.load(file, Loader=yaml.FullLoader)
         self.username = self.data["account_username"][0]
         self.password = self.data["account_password"][0]
-        
+
     def login(self):
         """A function to login to your account"""
         try:
@@ -38,18 +44,147 @@ class TwitterBot():
     def accept_cookie(self):
         """A function that accept cookie"""
         try:
-            self.page.locator('xpath=//*[@id="layers"]/div/div[3]/div/div/div/div[2]/button[1]').click()
+            self.page.locator(ACCEPT_COOKIE_ATTRIBUTE).click()
         except Exception as e:
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
                 time.sleep(60 * 15)
                 self.accept_cookie()
-            
+
             traceback.print_exc()
+
+    def like_a_tweet(self,url):
+        """A function to like a tweet"""
+        try:
+            self.page.goto(url)
+            self.page.locator(LIKE_A_TWEET_ATTRIBUTE).click()
+            self.random_stop()
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.like_a_tweet(url)
+
+            traceback.print_exc()
+
+    def unlike_a_tweet(self,url):
+        """A function to unlike a tweet"""
+        try:
+            self.page.goto(url)
+            self.page.locator(UNLIKE_A_TWEET_ATTRIBUTE).click()
+            self.random_stop()
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.unlike_a_tweet(url)
+
+            traceback.print_exc()
+
+    def retweet_a_tweet(self,url,load_page=True):
+        """A function to retweet a tweet"""
+        try:
+            if load_page:
+                self.page.goto(url)
+            self.page.locator(RETWEET_A_TWEET_ATTRIBUTE).click()
+            time.sleep(randint(1,5))
+            self.page.locator(RETWEET_CONFIRM_ATTRIBUTE).click()
+            self.random_stop()
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.retweet_a_tweet(url,load_page)
+
+            traceback.print_exc()
+    
+    
+    def unretweet_a_tweet(self,url,load_page=True):
+        """A function to retweet a tweet"""
+        try:
+            if load_page:
+                self.page.goto(url)
+            self.page.locator(UNRETWEET_A_TWEET_ATTRIBUTE).click()
+            time.sleep(randint(1,5))
+            self.page.locator(UNRETWEET_CONFIRM_ATTRIBUTE).click()
+            
+            self.random_stop()
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.unretweet_a_tweet(url,load_page)
+
+            traceback.print_exc()
+    
+    def comment_a_tweet(self,url,text,load_page=True):
+        """A function to comment a tweet"""
+        try:
+            if load_page:
+                self.page.goto(url)
+            #self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).click()
+            self.page.locator(COMMENT_TEXTBOX_ATTRIBUTE).click()  
+            self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).fill(text)
+            time.sleep(randint(1,5))
+            self.page.locator(POST_A_TWEET_BUTTON_ATTRIBUTE).click()
+            self.random_stop()
+
+
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.comment_a_tweet(url,text,load_page)
+
+            traceback.print_exc()
+    
+    def follow_an_account(self,account):
+        """A function to follow an account"""
+        try:
+            self.page.goto(f"https://x.com/{account}")
+            self.page.locator(FOLLOW_AN_ACCOUNT_ATTRIBUTE).click()
+            self.random_stop()
+
+
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.follow_an_account(account)
+
+            traceback.print_exc()
+    
+    def unfollow_an_account(self,account):
+        """A function to unfollow an account"""
+        try:
+            self.page.goto(f"https://x.com/{account}")
+            self.page.locator(UNFOLLOW_AN_ACCOUNT_ATTRIBUTE).click()
+            time.sleep(randint(1,5))
+            self.page.locator(UNFOLLOW_AN_ACCOUNT_CONFIRM_ATTRIBUTE).click()
+            self.random_stop()
+
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.unfollow_an_account(account)
+
+            traceback.print_exc()
+    
+    def random_stop(self):
+        """A function that add random time.sleep"""
+        time.sleep(randint(1,60))
 
     def start(self):
         """A function to start the bot"""
         print(f"Hello {self.username}")
         if self.login() is False:
             return False
+
+        time.sleep(10)
+        self.page.goto(TWEET_TO_SEE_AFTER_LOGIN)
+        url_to_test = "https://x.com/L_ThinkTank/status/2063274599328948555"
+        
+        self.random_stop()
         self.accept_cookie()
+        
+        # self.retweet_a_tweet("https://x.com/L_ThinkTank/status/2063274599328948555")
+        # self.unretweet_a_tweet("https://x.com/L_ThinkTank/status/2063274599328948555")
+        # self.retweet_a_tweet("https://x.com/L_ThinkTank/status/2063274599328948555",False)
+        # self.follow_an_account("L_ThinkTank")
+        # self.unfollow_an_account("L_ThinkTank")
+        # self.follow_an_account("L_ThinkTank")
+        
         time.sleep(10000)

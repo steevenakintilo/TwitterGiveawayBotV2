@@ -1,0 +1,14 @@
+giveaway
+#concours 
+concours like 
+concours rt
+concours follow 
+#JeuConcours 
+JeuConcours 
+jeu concours 
+offre follow gagnant 
+concours pour gagner
+gagner rt
+Gagnez rt follow
+RT AND follow) OR (rt AND follow) OR (concours AND rt AND like) OR (concours AND rt AND fav) OR (RT AND tweet AND Follow) OR (concours AND rt AND follow) OR (rt AND follow AND tas) OR (rt AND follow AND tirage AND au AND sort)
+(rt AND follow AND gagner) OR (rt AND follow AND commente) OR (rt AND suivre AND concours) OR (rt AND suivez AND concours) OR (rt AND suivre AND tirage AND au AND sort) OR (rt AND suivre AND tas) OR (concours AND remporter) OR (remporter AND rt) OR (concours AND tas AND le) OR (concours AND résultats AND le AND rt) OR (tirage AND au AND sort AND concours) OR (concours AND résultat AND le AND rt)
