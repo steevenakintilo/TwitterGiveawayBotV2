@@ -126,6 +126,14 @@ def reset_file(path):
         f.close  
     except:
         pass
+
+def is_user_valid(user):
+    valid_char = "0123456789abcdefghijklmnopqrstuvwxyz_"
+    for letter in user.lower():
+        if letter not in user:
+            return False
+    return True
+
 def main_one():
     with open("configuration.yml", "r",encoding="utf-8") as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
@@ -212,7 +220,8 @@ def main_one():
     today_date = datetime.now().strftime("%Y:%m:%d")
 
     for user_to_follow in tttt_follow:
-        write_into_file("../txt_files_folder/user_to_follow.txt",f"{user_to_follow} {today_date}"+"\n")
+        if is_user_valid(user_to_follow):
+            write_into_file("../txt_files_folder/user_to_follow.txt",f"{user_to_follow} {today_date}"+"\n")
     
     rsend_message_discord("I'm skyler white yooo",55)
     for tweet in tweet_from_url:

@@ -14,6 +14,9 @@ import yaml
 # Too general exception
 # pylint: disable=W0718
 
+# No exception type specified
+# pylint: disable=W0702
+
 class TwitterBot():
     """Main class"""
     def __init__(self):
@@ -146,7 +149,7 @@ class TwitterBot():
                 self.follow_an_account(account)
 
             traceback.print_exc()
-    
+
     def unfollow_an_account(self,account):
         """A function to unfollow an account"""
         try:
@@ -162,7 +165,70 @@ class TwitterBot():
                 self.unfollow_an_account(account)
 
             traceback.print_exc()
+
+    def is_login_good(self):
+        """A function that check if the login went well"""
+        try:
+            self.page.goto(f"https://x.com/{self.username}")
+            self.page.locator(EDIT_PROFILE_ATTRIBUTE)
+            time.sleep(randint(1,5))
+            return True
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.is_login_good()
+
+            return False
+
+    def setup_passcode(self,fast=False):
+        """A function that will create a passcode"""
+        try:
+            if fast is False:
+                self.page.locator(CREATE_A_PASSCODE_ATTRIBUTE).click()
+                time.sleep(randint(1,5))
+
+            self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+            time.sleep(randint(1,5))
+
+            self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+            time.sleep(randint(1,5))
+            
+            # try:
+            #     self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+            # except:
+            #     pass
+
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+
+    def is_passcode_for_dm_needed(self):
+        """A function that check if passcode for dm is needed"""
+        try:
+            self.page.locator(FORGOT_PIN_ATTRIBUTE).wait_for(timeout=5000)
+            return True
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                    time.sleep(60 * 15)
+                    self.is_passcode_for_dm_needed()
+
+            return False
     
+    def check_dm(self):
+        """A function that will check if an user has recieved a new dm"""
+        try:
+            try:
+                self.page.locator(NEW_DM_ATTRIBUTE).wait_for(timeout=5000)
+                if self.is_passcode_for_dm_needed():
+                    self.setup_passcode(True)
+                
+            except:
+                return
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.check_dm()
+            return
     def random_stop(self):
         """A function that add random time.sleep"""
         time.sleep(randint(1,60))
@@ -170,16 +236,27 @@ class TwitterBot():
     def start(self):
         """A function to start the bot"""
         print(f"Hello {self.username}")
+        first_time = False
         if self.login() is False:
+            self.browser.close()
             return False
 
+        if self.is_login_good() is False:
+            print(f"Bad login on {self.username}")
+            self.browser.close()
+            return False
+        
         time.sleep(10)
         self.page.goto(TWEET_TO_SEE_AFTER_LOGIN)
         url_to_test = "https://x.com/L_ThinkTank/status/2063274599328948555"
         
         self.random_stop()
         self.accept_cookie()
-        
+        time.sleep(30)
+        if first_time:
+            self.setup_passcode()
+        else:
+            self.check_dm()
         # self.retweet_a_tweet("https://x.com/L_ThinkTank/status/2063274599328948555")
         # self.unretweet_a_tweet("https://x.com/L_ThinkTank/status/2063274599328948555")
         # self.retweet_a_tweet("https://x.com/L_ThinkTank/status/2063274599328948555",False)
@@ -188,3 +265,4 @@ class TwitterBot():
         # self.follow_an_account("L_ThinkTank")
         
         time.sleep(10000)
+        self.browser.close()
