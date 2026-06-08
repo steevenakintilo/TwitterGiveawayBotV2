@@ -27,7 +27,7 @@ from selenium.webdriver import ActionChains
 import pyperclip
 from discord_webhook import DiscordWebhook
 import yaml
-
+import json
 
 with open("configuration.yml", "r") as file:
     data = yaml.load(file, Loader=yaml.FullLoader)
@@ -93,14 +93,9 @@ def print_file_info(path):
     f.close()
     return(content)
 
-def send_message_discord(msg,nb=0):
+def send_message_discord(msg,url_name):
     try:
-        urls = print_file_info("webhook_url.txt").split("\n")[nb - 1]
-        if nb == 100:
-            urls = "https://discord.com/api/webhooks/1279605659846971464/lsjQH4FSUC01XUL_9dGlKDJZ6qAiBUc8tgRX-vRsIKqevlW9MB9bvBChTr4N85buvjN1"
-        if nb == 55:
-            urls = "https://discord.com/api/webhooks/1457133829348397208/p-8cW66KPCOoTGlWJ-ztLap3E-_XczwDrZFl2N_Klb3fOO79YhnIdlT8_Z82d99liwDR"
-        webhook = DiscordWebhook(url=urls, content=msg)
+        webhook = DiscordWebhook(url=url_name, content=msg)
         response = webhook.execute()
     except:
         pass
@@ -138,6 +133,14 @@ def main_one():
     with open("configuration.yml", "r",encoding="utf-8") as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
     
+
+    try:
+        with open("../../discord_data_dict2.json", "r", encoding="utf-8") as file:
+            discord_dict = json.load(file)
+    except:
+        with open("../../discord_data_dict2.json", "r", encoding="utf-8") as file:
+            discord_dict = json.load(file)
+
     account_num = 0
     tweet_txt = []
     crash_follow = []
@@ -184,61 +187,66 @@ def main_one():
 
     S.driver.refresh()
     time.sleep(5)
-    tweet_from_url , tweet_txt , tweet_user = get_giveaway_url(S)  
-    max_nb = 50
-    if len(tweet_from_url) >= max_nb:
-        tweet_from_url , tweet_txt , tweet_user = get_giveaway_url(S,True)
+    skip_giveaway = False
+    if skip_giveaway == False:
+        tweet_from_url , tweet_txt , tweet_user = get_giveaway_url(S)  
+        max_nb = 50
+        if len(tweet_from_url) >= max_nb:
+            tweet_from_url , tweet_txt , tweet_user = get_giveaway_url(S,True)
 
-    for d in range(len(tweet_from_url)):
-        time.sleep(1)
+        for d in range(len(tweet_from_url)):
+            time.sleep(1)
+            try:
+                crash_follow.append(tweet_user[d])
+                for g in get_who_to_follow(S,tweet_txt[d],tweet_user[d]):
+                    tt_follow.append(g)
+            except:
+                print("caca follow")
+        for tt in tt_follow:
+            t_follow.append(tt)
+
+        
         try:
-            crash_follow.append(tweet_user[d])
-            for g in get_who_to_follow(S,tweet_txt[d],tweet_user[d]):
-                tt_follow.append(g)
+            t_follows.remove("")
         except:
-            print("caca follow")
-    for tt in tt_follow:
-        t_follow.append(tt)
+            pass
+        for t in t_follows:
+            if t != "":
+                t_follow.append(t.replace(" ",""))
+        
+        t_follow = list(dict.fromkeys(t_follow))
+        
 
-    
-    try:
-        t_follows.remove("")
-    except:
-        pass
-    for t in t_follows:
-        if t != "":
-            t_follow.append(t.replace(" ",""))
-    
-    t_follow = list(dict.fromkeys(t_follow))
-    
+        for c in t_follow:
+            if c.lower() not in tttt_follow and len(c) < 16 and len(c) > 3:
+                tttt_follow.append(c.lower().replace("@",""))
+        
+        print(tttt_follow)
+        today_date = datetime.now().strftime("%Y:%m:%d")
 
-    for c in t_follow:
-        if c.lower() not in tttt_follow and len(c) < 16 and len(c) > 3:
-            tttt_follow.append(c.lower().replace("@",""))
-    
-    print(tttt_follow)
-    today_date = datetime.now().strftime("%Y:%m:%d")
+        for user_to_follow in tttt_follow:
+            if is_user_valid(user_to_follow):
+                write_into_file("../txt_files_folder/user_to_follow.txt",f"{user_to_follow} {today_date}"+"\n")
+        
+        #rsend_message_discord("I'm skyler white yooo",55)
+        send_message_discord(f"Hello there!")
+        send_message_discord(f"List of giveaway found {len(tweet_from_url)} today {today_date}")
+        for tweet in tweet_from_url:
+            #rsend_message_discord(tweet,55)
+            write_into_file("../txt_files_folder/all_giveaway.txt",f"{tweet} {today_date}"+"\n")
+            send_message_discord(tweet,discord_dict["list_of_giveaway_channel"])
 
-    for user_to_follow in tttt_follow:
-        if is_user_valid(user_to_follow):
-            write_into_file("../txt_files_folder/user_to_follow.txt",f"{user_to_follow} {today_date}"+"\n")
-    
-    rsend_message_discord("I'm skyler white yooo",55)
-    for tweet in tweet_from_url:
-        rsend_message_discord(tweet,55)
-        write_into_file("../txt_files_folder/all_giveaway.txt",f"{tweet} {today_date}"+"\n")
-    
-
-    
-    t_comment_or_not , t_full_comment, blabla = giweaway_from_url_file(tweet_txt,crash_follow,S)
-    
-    for comment_or_not , full_comment in zip(t_comment_or_not,t_full_comment):
-        write_into_file("../txt_files_folder/all_comment.txt",f"{comment_or_not}##@@##{full_comment}##@@##{today_date}"+"\n")
+        
+        t_comment_or_not , t_full_comment, blabla = giweaway_from_url_file(tweet_txt,crash_follow,S)
+        
+        for comment_or_not , full_comment in zip(t_comment_or_not,t_full_comment):
+            write_into_file("../txt_files_folder/all_comment.txt",f"{comment_or_not}##@@##{full_comment}##@@##{today_date}"+"\n")
 
 
 
-    skip = True
-    if skip == False:    
+    skip_random_rt = True
+    if skip_random_rt == False:
+        today_date = datetime.now().strftime("%Y:%m:%d")
         rt_url = search_tweet_for_better_rt(S)
 
 

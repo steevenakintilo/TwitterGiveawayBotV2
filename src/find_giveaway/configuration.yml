@@ -13,7 +13,6 @@ words_to_search:
   - "concours follow"
   - "JeuConcours"
   - "jeu concours"
-  
   - "offre follow gagnant"
   - "concours pour gagner"
   - "gagner rt"
@@ -1268,7 +1267,7 @@ max_giveaway: 250
 # Minimum of like the tweet must have
 minimum_like: 50
 # Minimum of reetweet the tweet must have
-minimum_rt: 750
+minimum_rt: 550
 #Maximum day for a giveaway to be done
 maximum_day: 6
 #Number of giveaway the bot can do

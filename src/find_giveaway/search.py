@@ -20,192 +20,6 @@ def remove_emojie(text):
     return emoji.replace_emoji(text, replace='')
 
 
-def quote_a_tweet(selenium_session,url,text=""):
-    if "a dit" in text:
-        ttext = text.split("\n")
-        text = ""
-        for t in ttext:
-            if "a dit" not in t:
-                text = text + t + " "
-    
-    text = remove_emojie(text)
-    if len(text) < 5:
-        return True
-    
-    try:
-        rt = False
-        if len(text) == 0:
-            text = "."
-        if len(text) == 0 or len(text) > 280:
-            text = text[0:279]
-        selenium_session.driver.set_page_load_timeout(15)
-        selenium_session.driver.get(url)
-        element = WebDriverWait(selenium_session.driver, 15).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')))
-        tweet_info = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')
-        pos = 0
-        for i in range(len(tweet_info)):
-            r = tweet_info[i]
-            if url.split("x.com")[1] in str(r.get_attribute("outerHTML")):
-                pos = i
-                break
-        
-        tweets_info = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="tweet"]')
-        
-        element = WebDriverWait(selenium_session.driver,5).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="retweet"]'))
-        )
-
-        for i in range(len(tweet_info)):
-            lower_data = str(tweet_info[i].get_property('outerHTML')).lower()
-            if i == pos:
-                if "unretweet" not in lower_data:
-                    rt = False
-        
-        if rt == False:
-            element = WebDriverWait(selenium_session.driver, 3).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="retweet"]')))
-        
-            retweet_button = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="retweet"]')
-        else:
-            element = WebDriverWait(selenium_session.driver, 3).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="unretweet"]')))
-        
-            retweet_button = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="unretweet"]')
-            
-        if pos > len(retweet_button):
-            retweet_button[len(retweet_button) - 1].click()
-        else:
-            try:
-                retweet_button[0].click()
-            except:
-                try:
-                    retweet_button[pos].click()
-                except:
-                    retweet_button[pos-1].click()
-                    
-        element = WebDriverWait(selenium_session.driver, 15).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '[href="/compose/post"]')))
-        
-        quote_button = selenium_session.driver.find_element(By.CSS_SELECTOR, '[href="/compose/post"]')
-        quote_button.click()
-        
-        element = WebDriverWait(selenium_session.driver, 15).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweetTextarea_0"]')))
-        
-        for t in text:
-            element.send_keys(t)
-            #time.sleep(0.02)
-        element.send_keys(" ")
-        element.send_keys(Keys.RETURN)
-        
-        element = WebDriverWait(selenium_session.driver, 15).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweetButton"]')))
-
-        wait = WebDriverWait(selenium_session.driver, 10)
-        target_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="tweetButton"]')))
-
-        selenium_session.driver.execute_script("arguments[0].scrollIntoView();", target_element)
-        
-        time.sleep(5)
-        target_element.click()
-        time.sleep(5)
-        print("quote done")
-        return True
-        
-    except Exception as e:
-        if "net::ERR_NAME_NOT_RESOLVED" in str(e):
-            print("Wifi error sleeping 3 minutes")
-                
-            time.sleep(300)
-        #selenium_session.driver.refresh()
-        return False
-
-def comment_a_tweet_with_emoji(S,url,text):
-    stop = True
-    text = remove_emojie(text)
-    if "a dit" in text:
-        ttext = text.split("\n")
-        text = ""
-        for t in ttext:
-            if "a dit" not in t:
-                text = text + t + " "
-    text = remove_emojie(text)
-    if len(text) < 5:
-        return True
-    while stop:
-        
-        try:
-
-            S.driver.set_page_load_timeout(15)
-            S.driver.get(url)
-            pos = 0
-            try:
-                element = WebDriverWait(S.driver, 15).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')))
-            except:
-                time.sleep(1)
-                
-            tweet_info = S.driver.find_elements(By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')
-            for i in range(len(tweet_info)):
-                r = tweet_info[i]
-                if url.split("x.com")[1] in str(r.get_attribute("outerHTML")):
-                    pos = i
-                    break
-            
-            try:
-                element = WebDriverWait(S.driver, 15).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="reply"]')))
-            except:
-                time.sleep(1)
-
-            comment_button = S.driver.find_elements(By.CSS_SELECTOR, '[data-testid="reply"]')
-            comment_button[pos].click()
-            time.sleep(2)
-            try:
-                element = WebDriverWait(S.driver, 15).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweetTextarea_0"]')))
-            except:
-                time.sleep(1)
-            
-            textbox = S.driver.find_element(By.CSS_SELECTOR, '[data-testid="tweetTextarea_0"]')
-            S.driver.execute_script("arguments[0].scrollIntoView();", textbox)
-            time.sleep(2)
-            textbox.click()
-            pyperclip.copy(text)
-            act = ActionChains(S.driver)
-            act.key_down(Keys.CONTROL).send_keys("v").key_up(Keys.CONTROL).perform()
-            
-            time.sleep(1.5)
-            time.sleep(1)
-            #textbox.click()
-            #print("ok 2")
-            time.sleep(2)
-            try:
-                element = WebDriverWait(S.driver, 15).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweetButton"]')))
-            except:            
-                time.sleep(1)
-            
-            wait = WebDriverWait(S.driver, 10)
-            target_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-testid="tweetButton"]')))
-            S.driver.execute_script("arguments[0].scrollIntoView();", target_element)
-            target_element.click()
-            time.sleep(5)
-            print("comment done")
-            return True
-        
-        except Exception as e:
-            if "net::ERR_NAME_NOT_RESOLVED" in str(e):
-                print("Wifi error sleeping 3 minutes")
-                
-                time.sleep(300)
-            if "KeyboardInterrupt" in str(e):
-                traceback.print_exc()
-            #S.driver.refresh()
-            time.sleep(0.5)
-            print("Bref comment with emoji")
-            return False
 
 def remove_days(days_to_remove):
     if days_to_remove < 0:
@@ -217,23 +31,6 @@ def remove_days(days_to_remove):
     new_date = current_date - timedelta(days=days_to_remove)
     
     return(new_date.strftime(date_format))
-
-def get_trend(selenium_session):
-    try:
-      selenium_session.driver.set_page_load_timeout(15)
-      selenium_session.driver.get("https://x.com/explore")
-      element = WebDriverWait(selenium_session.driver, 15).until(
-      EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="trend"]')))
-      trends = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="trend"]')
-      trends_list = []
-      pos = 0
-      for i in range(len(trends)):
-          r = trends[i]
-          trends_list.append(r.text.split("\n")[1])
-      return(trends_list)
-    except Exception as e:
-        print("Bref trend")
-        return ("a")
 
 def parse_number(num):
     num = str(num)
@@ -294,67 +91,6 @@ def check_elem_on_a_list(elem_, list_):
     return next((l for l in list_ if elem_ in l.lower()), elem_)
 
 
-def zet_tweet_info(selenium_session,url):
-    tweet_info_dict = {"username":"",
-    "text":"",}
-
-    try:
-        
-        selenium_session.driver.set_page_load_timeout(15)
-        selenium_session.driver.get(url)
-        user_tweet = url.split("/")[3]
-        
-        element = WebDriverWait(selenium_session.driver, 15).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')))
-                
-        tweet_info = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')
-        pos = 0
-        for i in range(len(tweet_info)):
-            r = tweet_info[i]
-            if url.split("x.com")[1] in str(r.get_attribute("outerHTML")):
-                pos = i
-                break
-        
-        element = WebDriverWait(selenium_session.driver, 15).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweet"]')))        
-        
-        _tweet_data = selenium_session.driver.find_elements(By.CSS_SELECTOR,'[data-testid="tweet"]')
-        _tweet_text = selenium_session.driver.find_elements(By.CSS_SELECTOR,'[data-testid="tweetText"]')
-        og = _tweet_text[0].text
-        td = _tweet_data[0].text
-        td = td.split("\n")
-        good = False
-        for elem in td:
-            if og == elem or og in elem:
-                good = True
-        if good == False:
-            time.sleep(0.2)
-            return ("o")
-        
-        tweet_data = str(_tweet_data[pos].text).split("\n")
-        tweet_text = str(_tweet_text[pos].text)
-        time.sleep(0.1)
-        return (tweet_text)
-    except Exception as e:
-        if "net::ERR_NAME_NOT_RESOLVED" in str(e):
-            print("Wifi error sleeping 3 minutes")
-
-            time.sleep(300)
-            return ("WIFI")
-
-        try:
-            element = WebDriverWait(selenium_session.driver, 3).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweetText"]')))
-            return element.text
-        except:
-            print("Bref tweet info")
-            return False
-        
-        print("Bref tweet info")
-        return (False)
-
-
-
 def get_tweet_info(selenium_session,url):
     tweet_info_dict = {"username":"",
     "text":"",}
@@ -390,6 +126,7 @@ def get_tweet_info(selenium_session,url):
         tweet_text = str(_tweet_text[pos].text)
         time.sleep(0.4)
         return (tweet_text)
+
     except Exception as e:
         if "net::ERR_NAME_NOT_RESOLVED" in str(e):
             print("Wifi error sleeping 3 minutes")
@@ -408,6 +145,50 @@ def get_tweet_info(selenium_session,url):
         #traceback.print_exc()
         #selenium_session.driver.refresh()
         return (False)
+
+def get_tweet_nb_of_rt(selenium_session,url):
+    tweet_info_dict = {"username":"",
+    "text":"",}
+
+    try:
+        selenium_session.driver.set_page_load_timeout(15)
+        selenium_session.driver.get(url)
+        user_tweet = url.split("/")[3]
+        
+        time.sleep(0.02)    
+        #selenium_session.driver.refresh()
+        time.sleep(0.02)
+    
+        element = WebDriverWait(selenium_session.driver, 15).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')))
+        tweet_info = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')
+        pos = 0
+        for i in range(len(tweet_info)):
+            r = tweet_info[i]
+            if url.split("x.com")[1] in str(r.get_attribute("outerHTML")):
+                pos = i
+                break
+        
+        element = WebDriverWait(selenium_session.driver, 15).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="retweet"]')))  
+
+        element = selenium_session.driver.find_elements(By.CSS_SELECTOR,'[data-testid="retweet"]')
+
+        nb_of_rt = element[pos].text
+        print("")
+        
+        time.sleep(0.4)
+        return (nb_of_rt)
+
+    except Exception as e:
+        if "net::ERR_NAME_NOT_RESOLVED" in str(e):
+            print("Wifi error sleeping 3 minutes")
+
+            time.sleep(300)
+            return ("WIFI")
+        #traceback.print_exc()
+        #selenium_session.driver.refresh()
+        return (0)
 
 def search_tweet(selenium_session,query="hello",nb_of_tweet_to_search=10,sss=0):
     list_of_tweet_url = []
@@ -447,7 +228,7 @@ def search_tweet(selenium_session,query="hello",nb_of_tweet_to_search=10,sss=0):
         
         except:
             selenium_session.driver.refresh()
-            time.sleep(15)
+            time.sleep(10)
             input_box = selenium_session.driver.find_element(By.XPATH, '/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[2]/div/div/div/form/div[1]/div/div/div/div/div[2]/div/input')
         
         input_box.click()
@@ -1025,17 +806,19 @@ def search_tweet_for_better_rt(selenium_session):
     tweet_url = []
     already_comment = print_file_info("comment.txt").split("\n")
     accb = print_file_info("accb.txt").lower()
-    already_rt = print_file_info("rt.txt").split("\n")
-    urll = print_file_info("url.txt").split("\n")
-    for u in urll:
-        already_rt.append(u)
+    already_rt = print_file_info("../txt_files_folder/all_random_rt.txt").split("\n")
+    
+    # urll = print_file_info("url.txt").split("\n")
+    # for u in urll:
+    #     already_rt.append(u)
+    
     try:
-        nbTweetDone = len(print_file_info("recent_url.txt").split("\n")) - 1
+        nbTweetDone = len(print_file_info("../txt_files_folder/recent_url.txt").split("\n")) - 1
     except:
         nbTweetDone = 9999
 
     print("Leeennnnn nbTweetDone " , nbTweetDone)
-    if len(print_file_info("recent_url.txt").split("\n")) <= 1:
+    if len(print_file_info("../txt_files_folder/recent_url.txt").split("\n")) <= 1:
         nbTweetDone = randint(12,25)
     if nbTweetDone <= 4:
         nb = randint(15,25)
@@ -1187,7 +970,7 @@ def search_tweet_for_better_rt(selenium_session):
                         else:
                             if t["url"] not in already_rt:
                                 url_list.append(t["url"])
-                                write_into_file("rt.txt",t["url"]+"\n")
+                                write_into_file("../txt_files_folder/all_randomrt.txt",t["url"]+"\n")
                     
 
                     print("not enough kaizen tweet found will search more")
@@ -1202,7 +985,7 @@ def search_tweet_for_better_rt(selenium_session):
                         else:
                             if t["url"] not in already_rt:
                                 url_list.append(t["url"])
-                                write_into_file("rt.txt",t["url"]+"\n")
+                                write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                     
                 elif nb_nb_word > 0 and d.minimum_rt == 2525 and "kaizen" in str(sentence_word):
                     print("weie 1")
@@ -1237,7 +1020,7 @@ def search_tweet_for_better_rt(selenium_session):
                         else:
                             if t["url"] not in already_rt:
                                 url_list.append(t["url"])
-                                write_into_file("rt.txt",t["url"]+"\n")
+                                write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                     
 
                     print("not enough kaizen tweet found will search more")
@@ -1252,7 +1035,7 @@ def search_tweet_for_better_rt(selenium_session):
                         else:
                             if t["url"] not in already_rt:
                                 url_list.append(t["url"])
-                                write_into_file("rt.txt",t["url"]+"\n")
+                                write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                     
                 
                 if kaizen == False:
@@ -1332,7 +1115,7 @@ def search_tweet_for_better_rt(selenium_session):
                                     else:
                                         if t["url"] not in already_rt:
                                             url_list.append(t["url"])
-                                            write_into_file("rt.txt",t["url"]+"\n")
+                                            write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                             except:
                                 traceback.print_exc()
                                 print("here 4")
@@ -1350,7 +1133,7 @@ def search_tweet_for_better_rt(selenium_session):
                                 else:
                                     if t["url"] not in already_rt:
                                         url_list.append(t["url"])
-                                        write_into_file("rt.txt",t["url"]+"\n")
+                                        write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                         except:
                             traceback.print_exc()
                             print("here 4")
@@ -1365,7 +1148,7 @@ def search_tweet_for_better_rt(selenium_session):
                                 else:
                                     if t["url"] not in already_rt:
                                         url_list.append(t["url"])
-                                        write_into_file("rt.txt",t["url"]+"\n")
+                                        write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                         except:
                             traceback.print_exc()
                             print("here 3")
@@ -1379,7 +1162,7 @@ def search_tweet_for_better_rt(selenium_session):
                             else:
                                 if t["url"] not in already_rt:
                                     url_list.append(t["url"])
-                                    write_into_file("rt.txt",t["url"]+"\n")
+                                    write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
     
                     except:
                         traceback.print_exc()
@@ -1400,7 +1183,7 @@ def search_tweet_for_better_rt(selenium_session):
                     gpt = randint(1,20)
                 
                 print("GPT VALUE " , gpt)
-                write_into_file("error.txt","5")
+                #write_into_file("error.txt","5")
                 gpt = 0
                 if gpt != 1:
                     return url_list 
@@ -1770,8 +1553,8 @@ def is_date_good(date_str,text):
 def get_giveaway_url(selenium_session,search=False):
     try:
         d = Data()
-        reset_file("recent_url.txt")
-        reset_file("last_run.txt")
+        reset_file("../txt_files_folder/recent_url.txt")
+
         tweets_need_to_comment_or_not = []
         tweets_text = []
         tweets_id = []
@@ -1782,25 +1565,20 @@ def get_giveaway_url(selenium_session,search=False):
         char = '#'
         full_phrase = ""
         doublon = 0
-        url_from_file = print_file_info("url.txt").split("\n")
+        url_from_file = print_file_info("../txt_files_folder/allurl.txt").split("\n")
         url_from_ban = ["krpokgpoerkgpkg"]
-        accb = print_file_info("accb.txt").lower().split("\n")
-        url_from_like = print_file_info("url.txt").split("\n")
+        #accb = print_file_info("accb.txt").lower().split("\n")
+        accb = [""]
+        url_from_like = print_file_info("../txt_files_folder/allurl.txt").split("\n")
         
-        try:
-            from datetime import datetime
-            dateT = datetime.now().strftime("%d/%m/%Y")
-            write_into_file("last_run.txt",dateT)
-            write_into_file("all_run.txt",dateT+"\n")
-            
-        except:
-            pass
         with open("configuration.yml", "r",encoding="utf-8") as file:
             data = yaml.load(file, Loader=yaml.FullLoader)
     
 
-        accz = print_file_info("accz.txt").lower().split("\n")    
-        accrypto = print_file_info("accrypto.txt").lower().split("\n")
+        #accz = print_file_info("accz.txt").lower().split("\n")
+        accz = [""]
+        #accrypto = print_file_info("accrypto.txt").lower().split("\n")
+        accrypto = [""]
         username_info = data["account_username"][0]
         current_directory = os.getcwd()
         currentDir = current_directory.split("\\")[-1]
@@ -1863,6 +1641,7 @@ def get_giveaway_url(selenium_session,search=False):
                 
         
         
+        draw_date_list = []
 
         # # TAS LE 6 JANVIER
 
@@ -2009,10 +1788,10 @@ def get_giveaway_url(selenium_session,search=False):
 
         # try:
         #     rlz = "https://x.com/SFR/status/1937124181558124725?t=3H-2c5j0ygAVYKGoyfsbLw&s=19"
-        #     drawDate = print_file_info("drawDate.txt").lower().split("\n")
+        #     drawDate = print_file_info("../txt_files_folder/drawDate.txt").lower().split("\n")
 
         #     if rlz.lower() not in drawDate:
-        #         write_into_file("drawDate.txt","2021-07-01 https://x.com/SFR/status/1937124181558124725?t=3H-2c5j0ygAVYKGoyfsbLw&s=19\n")
+        #         write_into_file("../txt_files_folder/drawDate.txt","2021-07-01 https://x.com/SFR/status/1937124181558124725?t=3H-2c5j0ygAVYKGoyfsbLw&s=19\n")
         #     url = "https://x.com/SFR/status/1937124181558124725?t=3H-2c5j0ygAVYKGoyfsbLw&s=19"
         #     if url not in url_from_file:
         #         print("good good SFR")
@@ -2028,10 +1807,10 @@ def get_giveaway_url(selenium_session,search=False):
 
         # try:
         #     rlz = "https://x.com/coinacademy_fr/status/1939730407156502726"
-        #     drawDate = print_file_info("drawDate.txt").lower().split("\n")
+        #     drawDate = print_file_info("../txt_files_folder/drawDate.txt").lower().split("\n")
 
         #     if rlz.lower() not in drawDate:
-        #         write_into_file("drawDate.txt","2021-07-07 https://x.com/coinacademy_fr/status/1939730407156502726\n")
+        #         write_into_file("../txt_files_folder/drawDate.txt","2021-07-07 https://x.com/coinacademy_fr/status/1939730407156502726\n")
         #     url = "https://x.com/coinacademy_fr/status/1939730407156502726"
         #     if url not in url_from_file:
         #         print("good good coinacademy_fr")
@@ -2046,10 +1825,10 @@ def get_giveaway_url(selenium_session,search=False):
 
         # try:
         #     url = "https://x.com/CHOWH1_/status/1972373126496600359?t=dtzvkPSDO8hhVxrg8TK6Ww&s=19\n"
-        #     drawDate = print_file_info("drawDate.txt").lower().split("\n")
+        #     drawDate = print_file_info("../txt_files_folder/drawDate.txt").lower().split("\n")
 
         #     if url.lower() not in drawDate:
-        #         write_into_file("drawDate.txt",f"2021-07-07 {url}")
+        #         write_into_file("../txt_files_folder/drawDate.txt",f"2021-07-07 {url}")
         
         #     url = "https://x.com/CHOWH1_/status/1972373126496600359?t=dtzvkPSDO8hhVxrg8TK6Ww&s=19"
         #     if url not in url_from_file:
@@ -2499,10 +2278,19 @@ def get_giveaway_url(selenium_session,search=False):
         #     print("bip bip error ASUS_ROG_FR")
 
         if search:
+            # for url in tweets_url:
+            #     write_into_file("url.txt",url+"\n")
+            #     write_into_file("recent_url.txt",url+"\n")
+
+            from datetime import datetime
+            dateT = datetime.now().strftime("%d/%m/%Y")             
+
+            allurl = print_file_info("../txt_files_folder/allurl.txt").lower()
             for url in tweets_url:
-                write_into_file("url.txt",url+"\n")
-                write_into_file("recent_url.txt",url+"\n")
-            return (tweets_url,tweets_text,tweet_user)    
+                if url.lower() not in allurl:
+                    write_into_file("../txt_files_folder/allurl.txt",url+ " " + dateT + " " + "\n")
+
+            return (tweets_url,tweets_text,tweet_user)
 
         # target_date = datetime(2025, 10, 7).date()
         
@@ -2778,20 +2566,23 @@ def get_giveaway_url(selenium_session,search=False):
             #             giveaway_foud_per_word+=1
             # except:
             #     print("bip bip error Minxt0")
-            
-        d_word_to_search = print_file_info("searchQuery.txt").split("\n")
-        nb_of_tweet_to_search = 99
-        if d.minimum_rt < 900:
-            d_word_to_search = d.word_to_search
-        d_word_to_search = print_file_info("searchQuery.txt").split("\n")
 
-        nb_of_giveaway_found = 0
-        if d.minimum_rt == 198:
-            d_word_to_search = print_file_info("searchQueryCrypto.txt").split("\n")            
-            d.minimum_rt = 250
-        else:
-            d_word_to_search = print_file_info("searchQuery.txt").split("\n")
-            #d_word_to_search = d.word_to_search
+
+        # DOESNT WORK
+         
+        # d_word_to_search = print_file_info("searchQuery.txt").split("\n")
+        # nb_of_tweet_to_search = 99
+        # if d.minimum_rt < 900:
+        #     d_word_to_search = d.word_to_search
+        # d_word_to_search = print_file_info("searchQuery.txt").split("\n")
+
+        # nb_of_giveaway_found = 0
+        # if d.minimum_rt == 198:
+        #     d_word_to_search = print_file_info("searchQueryCrypto.txt").split("\n")            
+        #     d.minimum_rt = 250
+        # else:
+        #     d_word_to_search = print_file_info("searchQuery.txt").split("\n")
+        #     #d_word_to_search = d.word_to_search
 
         d_word_to_search = data["words_to_search"]
         flopinfo = 0
@@ -2800,7 +2591,7 @@ def get_giveaway_url(selenium_session,search=False):
             if print_data == False:
                 print("### " , search_word)
                 print("### nb of giveaway foud " , nb_of_giveaway_found , d.nb_of_giveaway)
-                time.sleep(60)
+                time.sleep(10)
             if nb_of_giveaway_found <d.nb_of_giveaway and "." not in search_word:
                 text = search_word + ' lang:'+d.tweet_lang + " min_faves:"+str(d.minimum_like) + " min_retweets:"+str(d.minimum_rt)+" since:"+str(remove_days(d.maximum_day)) + " " + "-filter:replies " + ban_word
                 if d.tweet_lang == "any":
@@ -2812,22 +2603,33 @@ def get_giveaway_url(selenium_session,search=False):
                 
                 for g in giveaway:
                     giveaway_foud_per_word+=1
-                if nb_of_tweet_to_search < 10:
-                    time.sleep(10)
-                if nb_of_tweet_to_search <= 100 and nb_of_tweet_to_search >= 10:
-                    time.sleep(40)                
-                if nb_of_tweet_to_search > 100 and nb_of_tweet_to_search <= 300:
-                    time.sleep(60)
-                if nb_of_tweet_to_search > 300 and nb_of_tweet_to_search <= 999:
-                    time.sleep(60)
-                if nb_of_tweet_to_search >= 1000:
-                    time.sleep(800)
+                # if nb_of_tweet_to_search < 10:
+                #     time.sleep(10)
+                # if nb_of_tweet_to_search <= 100 and nb_of_tweet_to_search >= 10:
+                #     time.sleep(40)                
+                # if nb_of_tweet_to_search > 100 and nb_of_tweet_to_search <= 300:
+                #     time.sleep(60)
+                # if nb_of_tweet_to_search > 300 and nb_of_tweet_to_search <= 999:
+                #     time.sleep(60)
+                # if nb_of_tweet_to_search >= 1000:
+                #     time.sleep(800)
+                
                 c_text = ""
                 #skipThisOne = False
                 ban_giveaway = print_file_info("../txt_files_folder/ban_giveaway.txt").split("\n")
                 for g in giveaway:
                     if g["url"] in ban_giveaway:
                         continue
+                    
+
+                    x = get_tweet_nb_of_rt(selenium_session,g["url"])
+                    if len(x) == 0:
+                        continue
+                    try:
+                        if int(x) < 250:
+                            continue
+                    except:
+                        pass
                     if g["url"] not in tweets_url and check_for_forbidden_word(g["text"].lower()) == False and check_blacklist(g["username"]) == False and g["url"] not in url_from_file and g["url"].lower() not in url_from_ban and nb_of_giveaway_found < d.nb_of_giveaway and check_for_forbidden_word(g["username"].lower()) == False and g["url"] not in time_url:
                         if cryptoBro == True:
                             if len(g["text"])  < 15:
@@ -2885,10 +2687,12 @@ def get_giveaway_url(selenium_session,search=False):
                                 striiing = split_date(c_text)
                                 right_date = is_date_good(str(g["date"].split(" ")[0]),striiing)
                                 try:
-                                    draw_url = print_file_info("drawDate.txt").lower().split("\n")
+                                    draw_url = print_file_info("../txt_files_folder/drawDate.txt").lower().split("\n")
                                     draw_date_ = get_giveaway_draw_date(str(g["date"].split(" ")[0]),striiing)
                                     if draw_date_ != None and g["url"].lower() not in draw_url:
-                                        write_into_file("drawDate.txt",str(draw_date_) + " " + g["url"]+"\n")
+                                        write_into_file("../txt_files_folder/drawDate.txt",str(draw_date_) + " " + g["url"]+"\n")
+                                        draw_date_list.append(str(draw_date_))
+                                    
                                 except:
                                     traceback.print_exc()
                                     pass
@@ -2944,10 +2748,10 @@ def get_giveaway_url(selenium_session,search=False):
                                     striiing = split_date(c_text)
                                     right_date = is_date_good(str(g["date"].split(" ")[0]),striiing)
                                     try:
-                                        draw_url = print_file_info("drawDate.txt").lower().split("\n")
+                                        draw_url = print_file_info("../txt_files_folder/drawDate.txt").lower().split("\n")
                                         draw_date_ = get_giveaway_draw_date(str(g["date"].split(" ")[0]),striiing)
                                         if draw_date_ != None and g["url"].lower() not in draw_url:
-                                            write_into_file("drawDate.txt",str(draw_date_) + " " + g["url"]+"\n")
+                                            write_into_file("../txt_files_folder/drawDate.txt",str(draw_date_) + " " + g["url"]+"\n")
                                     except:
                                         traceback.print_exc()
                                         pass
@@ -2977,11 +2781,12 @@ def get_giveaway_url(selenium_session,search=False):
             tweets_url = tweets_url[:dif]
 
 
-        max_nb = 100
-        if len(tweets_url) <= max_nb:
-            for url in tweets_url:
-                write_into_file("url.txt",url+"\n")
-                write_into_file("recent_url.txt",url+"\n")
+        # max_nb = 100
+        
+        # if len(tweets_url) <= max_nb:
+        #     for url in tweets_url:
+        #         write_into_file("url.txt",url+"\n")
+        #         write_into_file("recent_url.txt",url+"\n")
 
         tweets_account_to_follow = get_a_better_list(tweets_account_to_follow)
         if print_data == True:
@@ -3002,6 +2807,7 @@ def get_giveaway_url(selenium_session,search=False):
             for url in tweets_url:
                 if url.lower() not in allurl:
                     write_into_file("../txt_files_folder/allurl.txt",url+ " " + dateT + " " + "\n")
+                    write_into_file("../txt_files_folder/recent_url.txt",url+"\n")
 
         except:
             pass

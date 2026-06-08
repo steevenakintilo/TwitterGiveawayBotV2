@@ -568,7 +568,7 @@ def giweaway_from_url_file(tweets_text,account_list,S):
 
         
         accounts_to_tag = []
-        tweet_from_url = print_file_info("recent_url.txt").split("\n")
+        tweet_from_url = print_file_info("./txt_files_folder/recent_url.txt").split("\n")
         tweet_from_url_ = []
         if len(tweet_from_url) > len(tweets_text):
             for i in range(len(tweets_text)):
@@ -589,12 +589,14 @@ def giweaway_from_url_file(tweets_text,account_list,S):
             if idxx % 24 == 0:
                 print("Sleeping for a minute " , idxx)
                 time.sleep(6)
-            if len(tweet_from_url_) < 3:
-                tweet_from_url_ = print_file_info("recent_url_bis.txt").split("\n")
-            try:
-                current_url = tweet_from_url_[idxx]
-            except:
-                current_url = print_file_info("recent_url.txt").split("\n")[idxx]
+            # if len(tweet_from_url_) < 3:
+            #     tweet_from_url_ = print_file_info("../txt_files_folder/recent_url_bis.txt").split("\n")
+            # try:
+            #     current_url = tweet_from_url_[idxx]
+            # except:
+                
+            current_url = print_file_info("../txt_files_folder/recent_url.txt").split("\n")[idxx]
+            print("len recent_url.txt" , len(print_file_info("./txt_files_folder/recent_url.txt").split("\n")) , idxx)
             words = t.split(" ")
             result = return_only_hashtag(t)
             hashtag = delete_hashtag_we_dont_want(result)
@@ -935,3 +937,4 @@ def copy_a_comment(selenium_session,url):
     except:
         d = Data()
         return "sentence_for_random_comment"
+    

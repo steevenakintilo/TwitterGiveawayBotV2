@@ -1,4 +1,4 @@
-from src.bot_folder.twitter import *
+from twitter import *
 
 if __name__ == "__main__":
     bot = TwitterBot()

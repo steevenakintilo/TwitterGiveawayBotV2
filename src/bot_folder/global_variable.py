@@ -36,6 +36,7 @@ CODEPASS_BUTTON_ATTRIBUTE_LIST = [
     'xpath=//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div[4]',
 ]
 NEW_DM_ATTRIBUTE = 'xpath=//*[@id="react-root"]/div/div/div[2]/header/div/div/div/div[1]/div[2]/nav/a[4]/div/div/div'
+OTP_CODE_TEXTBOX_ATTRIBUTE = "#jf-element jf-code-input-wrapper"
 
 # Variable
 
