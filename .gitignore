@@ -219,6 +219,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Don't push discord json files
+# Don't push discord json and cookies files
 discord_data_dict.json
 discord_data_dict2.json
+find_giveaway/cookies0.pkl

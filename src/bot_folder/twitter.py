@@ -29,14 +29,15 @@ from utility_function import *
 class TwitterBot():
     """Main class"""
     def __init__(self):
-        self.browser = launch_persistent_context(user_data_dir="./my_profile",geoip=True,headless=False,humanize=True)
-        self.page = self.browser.new_page()
         with open("configuration.yml", "r",encoding="utf-8") as file:
             self.data = yaml.load(file, Loader=yaml.FullLoader)
         self.username = self.data["account_username"][0]
         self.password = self.data["account_password"][0]
         self.today_date = datetime.now().date()
 
+        self.browser = launch_persistent_context(user_data_dir=f"./{self.username}",geoip=True,headless=False,humanize=True)
+        self.page = self.browser.new_page()
+        
         self.otp_accounts = print_file_content("../txt_account_file_folder/otp_acc.txt").lower().replace("\t"," ").strip().split("\n")
         self.list_of_account_you_follow = print_file_content("list_of_account_you_follow.txt").lower().split("\n")
         current_directory = os.getcwd()
@@ -166,6 +167,8 @@ class TwitterBot():
     def comment_a_tweet(self,url,text,load_page=True,print_error=False) -> bool:
         """A function to comment a tweet"""
         try:
+            if len(text) == 0:
+                return True
             if load_page:
                 self.page.goto(url)
             #self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).click()
@@ -270,6 +273,11 @@ class TwitterBot():
 
             self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
             time.sleep(randint(1,5))
+
+            try:
+                self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+            except:
+                pass
 
             return True
 
@@ -389,7 +397,7 @@ class TwitterBot():
         "A function that return the right number of people to tag and their username"
 
         try:
-            accountListToTag = print_file_content("account_to_tag.txt").split("\n")
+            accountListToTag = print_file_content("../../account_to_tag.txt").split("\n")
             accounts_to_tag = []
 
             for acc in accountListToTag:
@@ -406,11 +414,25 @@ class TwitterBot():
             shuffle(accounts_to_tag)
 
         if nb == 1:
-            return accounts_to_tag[0]
+            try:
+                return accounts_to_tag[0]
+            except:
+                accounts_to_tag = ["@Inoxtag " , "@Mediavenir " , "@Arkunir"]
+                return accounts_to_tag[0]
+            
         if nb == 2:
-            return accounts_to_tag[0]+" "+accounts_to_tag[1]
-        return " ".join(accounts_to_tag)
+            try:
+                return accounts_to_tag[0]+" "+accounts_to_tag[1]
+            except:
+                accounts_to_tag = ["@Inoxtag " , "@Mediavenir " , "@Arkunir"]
+                return accounts_to_tag[0]+" "+accounts_to_tag[1]
 
+        try:    
+            return " ".join(accounts_to_tag)
+        except:
+            accounts_to_tag = ["@Inoxtag " , "@Mediavenir " , "@Arkunir"]
+            return " ".join(accounts_to_tag)
+        
 
     def get_all_giveaway_data(self) -> list:
         """A function that will get all the giveaway url,comment and account to follow"""
@@ -543,6 +565,7 @@ class TwitterBot():
         if len(all_run) > 3:
             first_time_dm = False
         
+        
         if len(last_run) > 3:
             target_date = datetime.strptime(last_run, "%d/%m/%Y")
             # Get today's date
@@ -559,7 +582,8 @@ class TwitterBot():
 
             else:
                 print("Account already run not long time ago")
-                #return True
+                return True
+            
         else:
             first_time = True
             reset_file("last_run.txt")
@@ -606,15 +630,15 @@ class TwitterBot():
         if first_time:
             self.accept_cookie()
             time.sleep(30)
-
-        if first_time:
-            return True
+        
         send_message_discord(f"{self.username} is running https://x.com/{self.username}",self.discord_dict["list_of_running_account_channel"])
+
         
         if first_time_dm:
             self.setup_passcode()
         else:
             self.check_dm()
+
 
         list_of_tweet_url , list_of_account_to_follow , list_of_comment , need_to_comment_or_not , skip_this_giveaway  = self.get_all_giveaway_data()
         print(list_of_tweet_url)
@@ -625,18 +649,19 @@ class TwitterBot():
         done_giveaway = []
         today_giveaway = self.is_giveaway_date_today()
         bad_giveaway = print_file_content("../txt_files_folder/ban_giveaway.txt").lower()
+        giveaway_done = print_file_content("giveaway_done.txt").lower().split("\n")
 
         if len(today_giveaway) > 0:
             for giv in today_giveaway:
                 print(f"Giveaway to redo today: {giv}")
                 if giv not in bad_giveaway:
-                    self.unlike_a_tweet(giv)
-                    self.like_a_tweet(giv)
-                    self.unretweet_a_tweet(giv,False)
-                    self.retweet_a_tweet(giv,False)
-                    done_giveaway.append(giv)
+                    if giv in giveaway_done:
+                        self.unlike_a_tweet(giv)
+                        self.like_a_tweet(giv)
+                        self.unretweet_a_tweet(giv,False)
+                        self.retweet_a_tweet(giv,False)
+                        done_giveaway.append(giv)
 
-        giveaway_done = print_file_content("giveaway_done.txt").lower().split("\n")
         if len(list_of_account_to_follow) == 0:
             print("No giveaway found bye")
             return
