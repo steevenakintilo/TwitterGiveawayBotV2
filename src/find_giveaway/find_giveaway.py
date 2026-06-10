@@ -134,12 +134,8 @@ def main_one():
         data = yaml.load(file, Loader=yaml.FullLoader)
     
 
-    try:
-        with open("../../discord_data_dict2.json", "r", encoding="utf-8") as file:
-            discord_dict = json.load(file)
-    except:
-        with open("../../discord_data_dict2.json", "r", encoding="utf-8") as file:
-            discord_dict = json.load(file)
+    with open("../../discord_data_dict.json", "r", encoding="utf-8") as file:
+        discord_dict = json.load(file)
 
     try:
         send_message_discord(f"Hello there!",discord_dict["list_of_giveaway_channel"])

@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Don't push discord json files
+discord_data_dict.json
+discord_data_dict2.json

@@ -43,12 +43,8 @@ class TwitterBot():
         currentDir = current_directory.split("\\")[-1]
 
         self.otp_acc = False
-        try:
-            with open("../../discord_data_dict2.json", "r", encoding="utf-8") as file:
-                self.discord_dict = json.load(file)
-        except:
-            with open("../../discord_data_dict2.json", "r", encoding="utf-8") as file:
-                self.discord_dict = json.load(file)
+        with open("../../discord_data_dict.json", "r", encoding="utf-8") as file:
+            self.discord_dict = json.load(file)
 
         for acc in self.otp_accounts:
             if self.username.lower() in acc.lower() and " " in acc.lower():
