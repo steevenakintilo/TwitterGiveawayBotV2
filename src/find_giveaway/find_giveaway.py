@@ -141,6 +141,11 @@ def main_one():
         with open("../../discord_data_dict2.json", "r", encoding="utf-8") as file:
             discord_dict = json.load(file)
 
+    try:
+        send_message_discord(f"Hello there!",discord_dict["list_of_giveaway_channel"])
+    except:
+        pass
+   
     account_num = 0
     tweet_txt = []
     crash_follow = []
@@ -229,13 +234,17 @@ def main_one():
                 write_into_file("../txt_files_folder/user_to_follow.txt",f"{user_to_follow} {today_date}"+"\n")
         
         #rsend_message_discord("I'm skyler white yooo",55)
-        send_message_discord(f"Hello there!")
-        send_message_discord(f"List of giveaway found {len(tweet_from_url)} today {today_date}")
+        try:
+            send_message_discord(f"List of giveaway found {len(tweet_from_url)} today {today_date}",discord_dict["list_of_giveaway_channel"])
+        except:
+            pass
         for tweet in tweet_from_url:
             #rsend_message_discord(tweet,55)
             write_into_file("../txt_files_folder/all_giveaway.txt",f"{tweet} {today_date}"+"\n")
-            send_message_discord(tweet,discord_dict["list_of_giveaway_channel"])
-
+            try:
+                send_message_discord(tweet,discord_dict["list_of_giveaway_channel"])
+            except:
+                pass
         
         t_comment_or_not , t_full_comment, blabla = giweaway_from_url_file(tweet_txt,crash_follow,S)
         

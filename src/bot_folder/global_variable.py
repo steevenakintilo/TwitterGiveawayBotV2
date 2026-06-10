@@ -6,6 +6,7 @@
 
 TWITTER_LOGIN_PAGE_URL = "https://x.com"
 TWEET_TO_SEE_AFTER_LOGIN = "https://x.com/Holtadjust/status/2063281449898274862"
+DM_PAGE = "https://x.com/i/chat"
 
 # Element Attribute
 
@@ -36,8 +37,9 @@ CODEPASS_BUTTON_ATTRIBUTE_LIST = [
     'xpath=//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div[4]',
 ]
 NEW_DM_ATTRIBUTE = 'xpath=//*[@id="react-root"]/div/div/div[2]/header/div/div/div/div[1]/div[2]/nav/a[4]/div/div/div'
-OTP_CODE_TEXTBOX_ATTRIBUTE = "#jf-element jf-code-input-wrapper"
-
+OTP_CODE_TEXTBOX_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div[1]/form/div[1]/div[2]/div[2]/div/div/div/div[2]/div/div/fieldset/div'
+#UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button/div'
+UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button'
 # Variable
 
 WAIT_TIME_BEFORE_TIMEOUT = 1

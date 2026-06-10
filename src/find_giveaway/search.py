@@ -2587,11 +2587,12 @@ def get_giveaway_url(selenium_session,search=False):
         d_word_to_search = data["words_to_search"]
         flopinfo = 0
         d.nb_of_giveaway = 10000
+        time.sleep(350)
         for search_word in d_word_to_search:
             if print_data == False:
                 print("### " , search_word)
                 print("### nb of giveaway foud " , nb_of_giveaway_found , d.nb_of_giveaway)
-                time.sleep(10)
+                time.sleep(20)
             if nb_of_giveaway_found <d.nb_of_giveaway and "." not in search_word:
                 text = search_word + ' lang:'+d.tweet_lang + " min_faves:"+str(d.minimum_like) + " min_retweets:"+str(d.minimum_rt)+" since:"+str(remove_days(d.maximum_day)) + " " + "-filter:replies " + ban_word
                 if d.tweet_lang == "any":
@@ -2623,8 +2624,10 @@ def get_giveaway_url(selenium_session,search=False):
                     
 
                     x = get_tweet_nb_of_rt(selenium_session,g["url"])
-                    if len(x) == 0:
+                    
+                    if len(str(x)) == 0:
                         continue
+                    
                     try:
                         if int(x) < 250:
                             continue
