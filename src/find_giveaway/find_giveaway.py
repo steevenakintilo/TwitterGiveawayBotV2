@@ -29,7 +29,7 @@ from discord_webhook import DiscordWebhook
 import yaml
 import json
 
-with open("configuration.yml", "r") as file:
+with open("../../configuration.yml", "r") as file:
     data = yaml.load(file, Loader=yaml.FullLoader)
     
 MINTIME = data["min_time"]
@@ -130,7 +130,7 @@ def is_user_valid(user):
     return True
 
 def main_one():
-    with open("configuration.yml", "r",encoding="utf-8") as file:
+    with open("../../configuration.yml", "r",encoding="utf-8") as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
     
 

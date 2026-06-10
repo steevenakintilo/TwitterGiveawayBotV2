@@ -22,7 +22,7 @@ from random import randint
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
 
-with open("configuration.yml", "r") as file:
+with open("../../configuration.yml", "r") as file:
     data = yaml.load(file, Loader=yaml.FullLoader)
     
 MINTIME = data["min_time"]
@@ -204,7 +204,7 @@ def save_coockie(selenium_session,nb):
 
 def get_and_save_cookie(username,password,index):
     giveaway_done = 0
-    with open("configuration.yml", "r",encoding="utf-8") as file:
+    with open("../../configuration.yml", "r",encoding="utf-8") as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
     
     username_info = data["account_username"]
