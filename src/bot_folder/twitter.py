@@ -38,7 +38,7 @@ class TwitterBot():
         self.browser = launch_persistent_context(user_data_dir=f"./{self.username}",geoip=True,headless=False,humanize=True)
         self.page = self.browser.new_page()
         
-        self.otp_accounts = print_file_content("../txt_account_file_folder/otp_acc.txt").lower().replace("\t"," ").strip().split("\n")
+        self.otp_accounts = print_file_content("../../otp_acc.txt").lower().replace("\t"," ").strip().split("\n")
         self.list_of_account_you_follow = print_file_content("list_of_account_you_follow.txt").lower().split("\n")
         current_directory = os.getcwd()
         currentDir = current_directory.split("\\")[-1]
@@ -98,7 +98,9 @@ class TwitterBot():
         try:
             self.page.goto(url)
             self.page.locator(LIKE_A_TWEET_ATTRIBUTE).click()
-            self.random_stop()
+            #self.random_stop()
+            time.sleep(randint(1,10))
+
             return True
         except Exception as e:
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
@@ -113,7 +115,9 @@ class TwitterBot():
         try:
             self.page.goto(url)
             self.page.locator(UNLIKE_A_TWEET_ATTRIBUTE).click()
-            self.random_stop()
+            #self.random_stop()
+            time.sleep(randint(1,10))
+            
             return True
         except Exception as e:
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
@@ -131,7 +135,9 @@ class TwitterBot():
             self.page.locator(RETWEET_A_TWEET_ATTRIBUTE).click()
             time.sleep(randint(1,5))
             self.page.locator(RETWEET_CONFIRM_ATTRIBUTE).click()
-            self.random_stop()
+            #self.random_stop()
+            time.sleep(randint(1,10))
+            
             try:
                 self.page.locator(UNLOCK_MORE_BUTTON_ATTRIBUTE).click(timeout=2500)
             except:
@@ -155,7 +161,9 @@ class TwitterBot():
             time.sleep(randint(1,5))
             self.page.locator(UNRETWEET_CONFIRM_ATTRIBUTE).click()
 
-            self.random_stop()
+            #self.random_stop()
+            time.sleep(randint(1,10))
+            
             return True
         except Exception as e:
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
@@ -176,7 +184,8 @@ class TwitterBot():
             self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).fill(text)
             time.sleep(randint(1,5))
             self.page.locator(POST_A_TWEET_BUTTON_ATTRIBUTE).click()
-            self.random_stop()
+            #self.random_stop()
+            time.sleep(randint(10,15))
             return True
 
         except Exception as e:
@@ -548,7 +557,7 @@ class TwitterBot():
             list_of_good_comment.append(comment.replace("@1@"," ").replace("@2@"," ").replace("@3@"," ").replace("@4@"," "))
         return list_of_tweet_url , list_of_account_to_follow , list_of_good_comment , need_to_comment_or_not , skip_this_giveaway
 
-    def start(self) -> bool:
+    def start(self,max_retry=0) -> bool:
         """A function to start the bot"""
         print(f"Hello {self.username}")
 
@@ -562,9 +571,9 @@ class TwitterBot():
         date_today = datetime.now().strftime("%d/%m/%Y")
         first_time = False
         first_time_dm = True
+        
         if len(all_run) > 3:
             first_time_dm = False
-        
         
         if len(last_run) > 3:
             target_date = datetime.strptime(last_run, "%d/%m/%Y")
@@ -573,7 +582,7 @@ class TwitterBot():
 
             # Difference in days
             delta = target_date - today
-
+            
             if int(str(delta).split(" ")[0]) <= -4:
                 print("Account can run")
                 reset_file("last_run.txt")
@@ -581,8 +590,9 @@ class TwitterBot():
                 write_into_file("all_run.txt",date_today+"\n")
 
             else:
-                print("Account already run not long time ago")
-                return True
+                if max_retry != 1:
+                    print("Account already run not long time ago")
+                    return True
             
         else:
             first_time = True
@@ -592,22 +602,29 @@ class TwitterBot():
 
         if first_time:
             if self.login() is False:
-                self.browser.close()
-                return False
+                if max_retry == 0:
+                    self.browser.close()
+                    self.start(1)
+                else:
+                    self.browser.close()
+                    return False
 
             #CHECK OTP APRES
 
             if self.otp_acc:
                 if self.set_otp_code(self.otp_code) is False:
-                    self.browser.close()
-                    send_message_discord(f"OTP error on login for https://x.com/{self.username}",self.discord_dict["list_of_login_error_channel"])
-                    return False
+                    if max_retry == 0:
+                        self.browser.close()
+                        self.start(1)
+                    else:
+                        self.browser.close()
+                        send_message_discord(f"OTP error on login for https://x.com/{self.username}",self.discord_dict["list_of_login_error_channel"])
+                        return False
 
 
         if self.is_login_good() is False:
             send_message_discord(f"Bad login for https://x.com/{self.username}",self.discord_dict["list_of_login_error_channel"])
             self.browser.close()
-            reset_file("last_run.txt")
             return False
 
             # self.login()
@@ -617,6 +634,8 @@ class TwitterBot():
             #     self.browser.close()
             #     return False
 
+
+        
         if first_time:
             time.sleep(10)
         self.page.goto("https://x.com/home")
@@ -658,8 +677,10 @@ class TwitterBot():
                     if giv in giveaway_done:
                         self.unlike_a_tweet(giv)
                         self.like_a_tweet(giv)
+                        self.random_stop()
                         self.unretweet_a_tweet(giv,False)
                         self.retweet_a_tweet(giv,False)
+                        self.random_stop()
                         done_giveaway.append(giv)
 
         if len(list_of_account_to_follow) == 0:
@@ -701,7 +722,7 @@ class TwitterBot():
                 if like and retweet and comment:
                     write_into_file("giveaway_done.txt",giveaway.lower()+"\n")
                     done_giveaway.append(giveaway.lower())
-
+                self.random_stop()
         # FOLLOW PEOPLE PART 2
 
         for i , account in enumerate(list_of_account_to_follow):
