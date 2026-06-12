@@ -67,7 +67,7 @@ class bot_launcher():
         index = 0
         # Launch Giveaway / Random Tweet to RT
 
-        search_giveaway = False
+        search_giveaway = True
         if search_giveaway:
             os.system("cd src/find_giveaway && python find_giveaway.py")
         # Launch All bot
