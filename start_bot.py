@@ -67,14 +67,18 @@ class bot_launcher():
         index = 0
         # Launch Giveaway / Random Tweet to RT
 
-        search_giveaway = True
-        if search_giveaway:
-            os.system("cd src/find_giveaway && python find_giveaway.py")
         # Launch All bot
         self.send_message_discord("-"*20,self.discord_dict["list_of_account_time_statistics"])
         self.send_message_discord("Hello World",self.discord_dict["list_of_account_time_statistics"])
         
+        search_giveaway = True
+        if search_giveaway:
+            os.system("cd src/find_giveaway && python find_giveaway.py")
+        
 
+        empty_space = "‎"
+        self.send_message_discord(f"{empty_space}\n"*3,self.discord_dict["list_of_account_time_statistics"])
+        
         self.send_message_discord(f"Starting giveaway on account of group {self.group_of_the_day}",self.discord_dict["list_of_account_time_statistics"])
         account_of_the_day = self.print_file_content(f"account_of_groupe{str(self.group_of_the_day)}_name.txt").split("\n")
         for bot in account_of_the_day:

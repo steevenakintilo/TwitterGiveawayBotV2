@@ -1787,6 +1787,11 @@ def get_giveaway_url(selenium_session,search=False):
                 #skipThisOne = False
                 ban_giveaway = print_file_info("../txt_files_folder/ban_giveaway.txt").split("\n")
                 for g in giveaway:
+                    try:
+                        if g["url"] in print_file_info("../txt_files_folder/allurl.txt"):
+                            continue
+                    except:
+                        pass
                     if g["url"] in ban_giveaway:
                         continue
                     

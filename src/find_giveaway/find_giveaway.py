@@ -238,6 +238,10 @@ def main_one():
             pass
         for tweet in tweet_from_url:
             #rsend_message_discord(tweet,55)
+            
+            if tweet in print_file_info("../txt_files_folder/allurl.txt"):
+                continue
+            
             write_into_file("../txt_files_folder/all_giveaway.txt",f"{tweet} {today_date}"+"\n")
             try:
                 send_message_discord(tweet,discord_dict["list_of_giveaway_channel"])
