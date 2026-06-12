@@ -210,7 +210,7 @@ def get_and_save_cookie(username,password,index):
     username_info = data["account_username"]
     account_num = 0
     username_info = [username]
-
+    reset_file("cookies0.pkl")
     for i in range(len(username_info)):
         account_num+=1
         time.sleep(1)
@@ -237,6 +237,7 @@ def get_and_save_cookie(username,password,index):
 
         save_coockie(S,index)
         time.sleep(10)
+        print("Coookie are now save you can now run python find_giveaway.py to search giveaway")
         S.driver.quit()
         return True
     

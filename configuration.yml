@@ -46,24 +46,21 @@ words_to_search:
 date_keyword:
   - "fin du concours le"
   - "tirage au sort le"
+  - "annoncé(e)s dans"
   - "fin du concours"
   - "tiré au sort le"
-  - "annoncé(e)s dans"
   - "tirage au sort"
   - "tirage dans"
   - "résultat le"
+  - "tirage 24h"
   - "t.a.s dans"
-  - "t.a.s le"
   - "tans dans"
-
-  
-
-  
+  - "t.a.s le"
   - "tas le"
   - "tas  :"
+  - "t.a.s"
   - "tas :"
   - "tas"
-  - "t.a.s"
 
 
 
@@ -1186,8 +1183,9 @@ giveaway_to_blacklist:
   - "wakfu"
       
 
-# # If headless is set to True the bot won't open a chrome windows while doing giveaways otherwise it will
-# headless: True
+# If headless is set to True the bot won't open a chrome windows while doing giveaways otherwise it will
+
+headless: True
 
 # #Add your own flux rss those will be used to make tweet after doing giveaway
 # flux_rss:
@@ -1203,13 +1201,15 @@ giveaway_to_blacklist:
 #   - "https://www.france24.com/fr/culture/rss"
 #   - "https://www.france24.com/fr/plan%C3%A8te/rss"
 
-# #If random is set to true the bot will do even more random action: It will do a random number of retweet and tweet beetween 1 and random_tweet_nb and random_retweet_nb and it will comment withouth sentence on random time
-# random_action: False
+#If random is set to true the bot will do even more random action: It will do a random number of retweet and tweet beetween 1 and random_tweet_nb and random_retweet_nb and it will comment withouth sentence on random time
 
-# #The minimum time to wait in second beetween each follow, giveaway done (Like,Retweet,Comment if needed) , random tweet, random retweet the bot will choose a random time beetween min and max time
-# min_time: 0
-# #The maximum time to wait in second beetween each follow, giveaway done (Like,Retweet,Comment if needed) , random tweet, random retweet the bot will choose a random time beetween min and max time
-# max_time: 5
+random_action: False
+
+#The minimum time to wait in second beetween each follow, giveaway done (Like,Retweet,Comment if needed) , random tweet, random retweet the bot will choose a random time beetween min and max time
+min_time: 0
+
+#The maximum time to wait in second beetween each follow, giveaway done (Like,Retweet,Comment if needed) , random tweet, random retweet the bot will choose a random time beetween min and max time
+max_time: 5
 
 #If the bot crashed and you want to redo the giveaway you where doing just set the value to true
 

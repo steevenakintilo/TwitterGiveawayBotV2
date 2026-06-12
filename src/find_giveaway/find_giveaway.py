@@ -176,6 +176,8 @@ def main_one():
         #print("Connecting to " + str(username_info[i]))
         time.sleep(1)
     except Exception as e:
+        print("Run python twt_cookies.py to save cookie for the account!")
+        return
         traceback.print_exc()
         try:
             from twt_cookies import main_ckk

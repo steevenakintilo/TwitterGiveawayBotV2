@@ -1,7 +1,5 @@
-# from src.bot_folder.twitter import *
+from start_bot import *
 
-# if __name__ == "__main__":
-#     bot = TwitterBot()
-#     bot.start()
-
-print("Nothing to see here yet")
+if __name__ == "__main__":
+    bot = bot_launcher()
+    bot.start()

@@ -64,19 +64,8 @@ account_to_blacklist = [
 
 
 class Data:
-    try:
-        with open("configuration.yml", "r",encoding="utf-8") as file:
-            data = yaml.load(file, Loader=yaml.FullLoader)
-        
-    except:
-        error = traceback.format_exc()
-        print(error)
-        urls = "https://discord.com/api/webhooks/1360294917238427678/2fdgRU0eMMCE0XU8HdUvjB0fEUT9GuZWrYGYgj9xD543oKPMJZeEhyFHV0SCSWnsacKK"
-        current_directory = os.getcwd()
-        currentDir = current_directory.split("\\")[-1]
-        
-        webhook = DiscordWebhook(url=urls, content=f"Traceback error bro on {currentDir}")
-        response = webhook.execute()
+    with open("../../configuration.yml", "r",encoding="utf-8") as file:
+        data = yaml.load(file, Loader=yaml.FullLoader)
         
 
     word_to_search = data["words_to_search"]
@@ -552,7 +541,7 @@ def giweaway_from_url_file(tweets_text,account_list,S):
         else:
             accounts_to_tag = [' @Twitter ', '@X ', '@ElonMusk ']
         
-        # accountListToTag = print_file_info("account_to_tag.txt").split("\n")
+        # accountListToTag = print_file_info("../../account_to_tag.txt").split("\n")
         # accounts_to_tag = []
         
         # for acc in accountListToTag:

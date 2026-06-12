@@ -777,7 +777,7 @@ def remove_hashtags(string):
 
 def search_tweet_for_better_rt(selenium_session):
     d = Data()
-    with open("configuration.yml", "r") as file:
+    with open("../../configuration.yml", "r") as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
     nb = data["random_retweet_nb"]
     username_info = data["account_username"][0]
@@ -1309,7 +1309,7 @@ def list_inside_text(list_one,text):
 
 
 def split_date(string):
-    with open("configuration.yml", "r") as file:
+    with open("../../configuration.yml", "r") as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
     keydate = data["date_keyword"]
     splitage = ""
@@ -1325,7 +1325,7 @@ def split_date(string):
     return "o"
 
 def check_date(string):
-    with open("configuration.yml", "r") as file:
+    with open("../../configuration.yml", "r") as file:
         data = yaml.load(file, Loader=yaml.FullLoader)
     keydate = data["date_keyword"]
     splitage = ""
@@ -1571,7 +1571,7 @@ def get_giveaway_url(selenium_session,search=False):
         accb = [""]
         url_from_like = print_file_info("../txt_files_folder/allurl.txt").split("\n")
         
-        with open("configuration.yml", "r",encoding="utf-8") as file:
+        with open("../../configuration.yml", "r",encoding="utf-8") as file:
             data = yaml.load(file, Loader=yaml.FullLoader)
     
 
@@ -1657,18 +1657,18 @@ def get_giveaway_url(selenium_session,search=False):
         # #     print("bip bip error msifrance")
         
         
-        target_date = datetime(2025, 12, 25).date()
-        if today < target_date:
-            try:
-                url = "https://x.com/^rtyuhi/status/gfhtjkl"
-                if url not in url_from_like:
-                    print("good good Inoxtag")
-                    tweets_url.append(url)
-                    tweet_user.append("Inoxtag")
-                    tweets_text.append("kgoperkgopkgpoerg") 
-                    giveaway_foud_per_word+=1
-            except:
-                print("bip bip error Inoxtag")
+        # target_date = datetime(2025, 12, 25).date()
+        # if today < target_date:
+        #     try:
+        #         url = "https://x.com/^rtyuhi/status/gfhtjkl"
+        #         if url not in url_from_like:
+        #             print("good good Inoxtag")
+        #             tweets_url.append(url)
+        #             tweet_user.append("Inoxtag")
+        #             tweets_text.append("kgoperkgopkgpoerg") 
+        #             giveaway_foud_per_word+=1
+        #     except:
+        #         print("bip bip error Inoxtag")
 
         
         # target_date = datetime(2025, 10, 7).date()
