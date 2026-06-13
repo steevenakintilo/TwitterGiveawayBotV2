@@ -25,8 +25,8 @@ from selenium.webdriver.chrome.options import Options
 with open("../../configuration.yml", "r") as file:
     data = yaml.load(file, Loader=yaml.FullLoader)
     
-MINTIME = data["min_time"]
-MAXTIME = data["max_time"]
+# MINTIME = data["min_time"]
+# MAXTIME = data["max_time"]
 
 uc.Chrome.__del__ = lambda self: None
 
