@@ -29,10 +29,13 @@ from utility_function import *
 class TwitterBot():
     """Main class"""
     def __init__(self):
-        with open("configuration.yml", "r",encoding="utf-8") as file:
+        with open("../../configuration.yml", "r",encoding="utf-8") as file:
             self.data = yaml.load(file, Loader=yaml.FullLoader)
-        self.username = self.data["account_username"][0]
-        self.password = self.data["account_password"][0]
+        with open("configuration.yml", "r",encoding="utf-8") as file:
+            self.data2 = yaml.load(file, Loader=yaml.FullLoader)
+        
+        self.username = self.data2["account_username"][0]
+        self.password = self.data2["account_password"][0]
         self.today_date = datetime.now().date()
 
         self.browser = launch_persistent_context(user_data_dir=f"./{self.username}",geoip=True,headless=False,humanize=True)
@@ -54,6 +57,7 @@ class TwitterBot():
                 self.otp_acc = True
                 self.otp_code = acc.split()[1]
                 print(self.otp_acc,self.otp_code)
+                break
 
         if self.username == "test_account":
             self.username = currentDir
@@ -101,6 +105,7 @@ class TwitterBot():
             self.page.goto(url)
             if print_error:
                 time.sleep(10)
+            time.sleep(randint(1,3))
             self.page.locator(LIKE_A_TWEET_ATTRIBUTE).click()
             #self.random_stop()
             time.sleep(randint(1,10))
