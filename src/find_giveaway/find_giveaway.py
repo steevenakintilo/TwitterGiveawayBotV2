@@ -255,7 +255,7 @@ def main_one():
 
 
 
-    skip_random_rt = True
+    skip_random_rt = False
     if skip_random_rt == False and data["random_retweet_and_tweet"]:
         today_date = datetime.now().strftime("%Y:%m:%d")
         rt_url = search_tweet_for_better_rt(S)

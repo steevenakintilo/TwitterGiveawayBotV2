@@ -62,7 +62,7 @@ class bot_launcher():
             os.system("chmod +x ./src/copy_twitter.sh")
             os.system("./src/copy_twitter.sh")
         else:
-            os.system(r".\src\copy_twitter.bat")
+            os.system(r"cd src && .\copy_twitter.bat")
 
     def start(self) -> None:
         """A function that will start all the bot"""
