@@ -229,9 +229,21 @@ def main_one():
             if is_user_valid(user_to_follow):
                 write_into_file("../txt_files_folder/user_to_follow.txt",f"{user_to_follow} {today_date}"+"\n")
         
+
+        not_found = 0
+        for tweet in tweet_from_url:
+            #rsend_message_discord(tweet,55)
+            
+            if tweet in print_file_info("../txt_files_folder/allurl.txt"):
+                not_found +=1
+                continue
+        
         #rsend_message_discord("I'm skyler white yooo",55)
         try:
-            send_message_discord(f"List of giveaway found {len(tweet_from_url)} today {today_date}",discord_dict["list_of_giveaway_channel"])
+            if not_found == len(tweet_from_url):
+                send_message_discord(f"No giveaway found today",discord_dict["list_of_giveaway_channel"])
+            else:
+                send_message_discord(f"List of giveaway found {len(tweet_from_url) - not_found} today {today_date}",discord_dict["list_of_giveaway_channel"])
         except:
             pass
         for tweet in tweet_from_url:
