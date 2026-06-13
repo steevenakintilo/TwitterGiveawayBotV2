@@ -104,8 +104,11 @@ class bot_launcher():
 
         new_day = self.group_of_the_day + 1 if self.group_of_the_day + 1 <= 3 else 1
 
-        if str(self.group_of_the_day) == "1":
-            self.check_for_update()
+        try:
+            if str(self.group_of_the_day) == "1":
+                self.check_for_update()
+        except:
+            pass
         # End
 
         self.reset_file("group_of_the_day.txt")
