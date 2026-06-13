@@ -1755,7 +1755,6 @@ def get_giveaway_url(selenium_session,search=False):
         d_word_to_search = data["words_to_search"]
         flopinfo = 0
         d.nb_of_giveaway = 10000
-        time.sleep(350)
         for search_word in d_word_to_search:
             if print_data == False:
                 print("### " , search_word)
