@@ -4,6 +4,18 @@ This is a new version of my previous TwitterGiveawayBot:
 
 https://github.com/steevenakintilo/TwitterGiveawayBot
 
+## 📘 Summary
+
+- [Requirements](#requirements)
+- [Features](#features)
+- [How does it works](#how-does-it-works)
+- [.txt files](#.txt-files)
+- [Discord](#Discord)
+- [How to add accounts?](#how-to-add-accounts?)
+- [Configuration file for each accounts](#configuration-file-for-each-accounts)
+- [Global configuration file](#global-configuration-file)
+- [Advices](#advices)
+
 ## Requirements
 To make the code work you will need to have Python and Pip installed in your computer.
 
