@@ -4,6 +4,8 @@ import json
 import os
 import time
 
+import platform
+
 from discord_webhook import DiscordWebhook
 
 
@@ -52,6 +54,16 @@ class bot_launcher():
 
         return hours, minutes, remaining_seconds
         
+    def check_for_update(self):
+        """A function that will check if the code has been updated"""
+        os_system = platform.system()
+        os.system("git pull")
+        if os_system != "Windows":
+            os.system("chmod +x ./src/copy_twitter.sh")
+            os.system("./src/copy_twitter.sh")
+        else:
+            os.system(r".\src\copy_twitter.bat")
+
     def start(self) -> None:
         """A function that will start all the bot"""
         start = time.time()
@@ -92,6 +104,8 @@ class bot_launcher():
 
         new_day = self.group_of_the_day + 1 if self.group_of_the_day + 1 <= 3 else 1
 
+        if str(self.group_of_the_day) == "1":
+            self.check_for_update()
         # End
 
         self.reset_file("group_of_the_day.txt")

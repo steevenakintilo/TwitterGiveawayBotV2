@@ -61,6 +61,7 @@ If the bot failed to launch after several just make an issues I will help you ma
 - The bot can work in any language.
 - The bot only log in once then use profile so it doesn't need to log in again.
 - The bot can work with account that require OTP code.
+- The bot wait randomly between 1 to 60 seconds between each follow/giveaway done/random retweet done to look more human
 - Unlilke the other bots you can find on github this one don't use api which means that any twitter account you have can be used with this bot.
 
 - Like Retweet and Comment a tweet giveaway.
