@@ -32,8 +32,6 @@ import json
 with open("../../configuration.yml", "r") as file:
     data = yaml.load(file, Loader=yaml.FullLoader)
     
-MINTIME = data["min_time"]
-MAXTIME = data["max_time"]
 
 class Scraper:
     
