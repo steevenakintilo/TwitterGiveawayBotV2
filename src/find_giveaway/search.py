@@ -985,7 +985,7 @@ def search_tweet_for_better_rt(selenium_session):
                         else:
                             if t["url"] not in already_rt:
                                 url_list.append(t["url"])
-                                write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
+                                #write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                     
                 elif nb_nb_word > 0 and d.minimum_rt == 2525 and "kaizen" in str(sentence_word):
                     print("weie 1")
@@ -1020,7 +1020,7 @@ def search_tweet_for_better_rt(selenium_session):
                         else:
                             if t["url"] not in already_rt:
                                 url_list.append(t["url"])
-                                write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
+                                #write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                     
 
                     print("not enough kaizen tweet found will search more")
@@ -1035,7 +1035,7 @@ def search_tweet_for_better_rt(selenium_session):
                         else:
                             if t["url"] not in already_rt:
                                 url_list.append(t["url"])
-                                write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
+                                #write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                     
                 
                 if kaizen == False:
@@ -1115,7 +1115,7 @@ def search_tweet_for_better_rt(selenium_session):
                                     else:
                                         if t["url"] not in already_rt:
                                             url_list.append(t["url"])
-                                            write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
+                                            #write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                             except:
                                 traceback.print_exc()
                                 print("here 4")
@@ -1133,7 +1133,7 @@ def search_tweet_for_better_rt(selenium_session):
                                 else:
                                     if t["url"] not in already_rt:
                                         url_list.append(t["url"])
-                                        write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
+                                        #write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                         except:
                             traceback.print_exc()
                             print("here 4")
@@ -1148,7 +1148,7 @@ def search_tweet_for_better_rt(selenium_session):
                                 else:
                                     if t["url"] not in already_rt:
                                         url_list.append(t["url"])
-                                        write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
+                                        #write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
                         except:
                             traceback.print_exc()
                             print("here 3")
@@ -1162,7 +1162,7 @@ def search_tweet_for_better_rt(selenium_session):
                             else:
                                 if t["url"] not in already_rt:
                                     url_list.append(t["url"])
-                                    write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
+                                    #write_into_file("../txt_files_folder/all_random_rt.txt",t["url"]+"\n")
     
                     except:
                         traceback.print_exc()
