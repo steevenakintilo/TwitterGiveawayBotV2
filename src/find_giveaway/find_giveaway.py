@@ -188,6 +188,7 @@ def main_one():
 
     S.driver.refresh()
     time.sleep(5)
+    
     skip_giveaway = False
     if skip_giveaway == False:
         tweet_from_url , tweet_txt , tweet_user = get_giveaway_url(S)  

@@ -612,7 +612,7 @@ class TwitterBot():
                 write_into_file("all_run.txt",date_today+"\n")
 
             else:
-                if max_retry != 1:
+                if max_retry != 1 and len(print_file_content("giveaway_done.txt").lower().split("\n")) != 0:
                     print("Account already run not long time ago")
                     return True
             
