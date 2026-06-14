@@ -707,6 +707,7 @@ class TwitterBot():
 
         if len(list_of_account_to_follow) == 0:
             print("No giveaway found bye")
+            self.browser.close()
             return
 
         # FOLLOW PEOPLE PART 1
@@ -715,7 +716,8 @@ class TwitterBot():
             split_list_nb = randint(1,len(list_of_account_to_follow) - 1)
         else:
             split_list_nb = 1
-
+        
+        shuffle(list_of_account_to_follow)
         for i , account in enumerate(list_of_account_to_follow):
             if i <= split_list_nb:
                 print(f"User {account} {i + 1}/{len(list_of_account_to_follow)}")
@@ -725,10 +727,21 @@ class TwitterBot():
 
 
         # DO GIVEAWAY
-
+        shuffle_list = []
+        for i in range(len(list_of_tweet_url)):
+            shuffle_list.append(i)
+        shuffle(shuffle_list)
         for i , giveaway in enumerate(list_of_tweet_url):
-            if giveaway.lower() not in giveaway_done and skip_this_giveaway[i] is not True and giveaway.lower() not in done_giveaway and giveaway.lower() not in bad_giveaway:
-                print(f"Giveaway number {i}/{len(list_of_tweet_url)} {giveaway}")
+            giveaway = list_of_tweet_url[shuffle_list[i]]
+            if giveaway.lower() in giveaway_done or skip_this_giveaway[shuffle_list[i]] is True or giveaway.lower() in done_giveaway or giveaway.lower() in bad_giveaway:
+                skip+=1
+
+        giveaway_nb = 0
+        for i , giveaway in enumerate(list_of_tweet_url):
+            giveaway = list_of_tweet_url[shuffle_list[i]]
+            if giveaway.lower() not in giveaway_done and skip_this_giveaway[shuffle_list[i]] is not True and giveaway.lower() not in done_giveaway and giveaway.lower() not in bad_giveaway:
+                giveaway_nb+=1
+                print(f"Giveaway number {giveaway_nb}/{len(list_of_tweet_url) - skip} {giveaway}")
                 like = self.like_a_tweet(giveaway)
                 if like is False:
                     like = self.like_a_tweet(giveaway,False)
@@ -739,10 +752,10 @@ class TwitterBot():
                     retweet = self.retweet_a_tweet(giveaway,True,False)
 
                 comment = True
-                if need_to_comment_or_not[i]:
-                    comment = self.comment_a_tweet(giveaway,list_of_comment[i],False)
+                if need_to_comment_or_not[shuffle_list[i]]:
+                    comment = self.comment_a_tweet(giveaway,list_of_comment[shuffle_list[i]],False)
                     if comment is False:
-                        comment = self.comment_a_tweet(giveaway,list_of_comment[i],True,False)
+                        comment = self.comment_a_tweet(giveaway,list_of_comment[shuffle_list[i]],True,False)
 
                 if like and retweet and comment:
                     write_into_file("giveaway_done.txt",giveaway.lower()+"\n")
@@ -763,13 +776,18 @@ class TwitterBot():
         random_rt_done = print_file_content("random_rt_done.txt").lower().split("\n")
 
         list_of_random_rt_tweet = []
+        # for random_rt in all_random_rt:
+        #     split_random_rt = random_rt.split(" ")
+        #     if len(split_random_rt[0]) > 1:
+        #         date = datetime.strptime(split_random_rt[1].replace(":","-"), '%Y-%m-%d').date()
+        #         delta = self.today_date - date
+        #         if delta.days <= 6:
+        #             list_of_random_rt_tweet.append(split_random_rt[0])
+
         for random_rt in all_random_rt:
             split_random_rt = random_rt.split(" ")
             if len(split_random_rt[0]) > 1:
-                date = datetime.strptime(split_random_rt[1].replace(":","-"), '%Y-%m-%d').date()
-                delta = self.today_date - date
-                if delta.days <= 6:
-                    list_of_random_rt_tweet.append(split_random_rt[0])
+                list_of_random_rt_tweet.append(split_random_rt[0])
 
         shuffle(list_of_random_rt_tweet)
 
