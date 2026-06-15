@@ -251,7 +251,7 @@ def search_tweet(selenium_session,query="hello",nb_of_tweet_to_search=10,sss=0):
         #     time.sleep(3)
         while run:
             try:
-                element = WebDriverWait(selenium_session.driver, 5).until(
+                element = WebDriverWait(selenium_session.driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweet"]')))
             except:
                 print("error searching tweet sleep for 30 sec")
@@ -1076,13 +1076,15 @@ def search_tweet_for_better_rt(selenium_session):
                                 tweet_found2 = search_tweets(selenium_session,str(sentence_acc) +" since:"+str(remove_days(30)),nb-nb_of_tweet)
                                 if tweet_found2 == "WIFI":
                                     tweet_found2 = search_tweets(selenium_session,str(sentence_acc) +" since:"+str(remove_days(30)),nb-nb_of_tweet)
-                            print(len(tweet_found), " nouveaux mot ")
-                            print(len(tweet_found2)," nouveaux compte ")
+                            #print(len(tweet_found), " nouveaux mot ")
+                            #print(len(tweet_found2)," nouveaux compte ")
 
                             if len(tweet_found) + len(tweet_found2) < 2:
                                 time.sleep(300)
                                 tweet_found2 = search_tweets(selenium_session,"from:alertesinfos OR from:Cerfiafr OR from:BFMTV min_retweets:80" +" since:"+str(remove_days(30)),nb-nb_of_tweet)
-                                print("len apres la der des der  " , len(tweet_found2))
+                                #print("len apres la der des der  " , len(tweet_found2))
+                                print("len after retry" , len(tweet_found2))
+                                
                         except:
                             pass
                         
