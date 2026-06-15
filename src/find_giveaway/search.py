@@ -251,7 +251,7 @@ def search_tweet(selenium_session,query="hello",nb_of_tweet_to_search=10,sss=0):
         #     time.sleep(3)
         while run:
             try:
-                element = WebDriverWait(selenium_session.driver, 10).until(
+                element = WebDriverWait(selenium_session.driver, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweet"]')))
             except:
                 print("error searching tweet sleep for 30 sec")
@@ -264,7 +264,7 @@ def search_tweet(selenium_session,query="hello",nb_of_tweet_to_search=10,sss=0):
                     element = WebDriverWait(selenium_session.driver, 5).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweet"]')))
                 except:
-                    print("error searching tweet even after refresh")
+                    #print("error searching tweet even after refresh")
                     return(data_list)
             tweets_info = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="tweet"]')
             tweets_text = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="tweetText"]')
