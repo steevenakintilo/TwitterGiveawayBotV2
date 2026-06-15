@@ -731,6 +731,7 @@ class TwitterBot():
         for i in range(len(list_of_tweet_url)):
             shuffle_list.append(i)
         shuffle(shuffle_list)
+        skip = 0
         for i , giveaway in enumerate(list_of_tweet_url):
             giveaway = list_of_tweet_url[shuffle_list[i]]
             if giveaway.lower() in giveaway_done or skip_this_giveaway[shuffle_list[i]] is True or giveaway.lower() in done_giveaway or giveaway.lower() in bad_giveaway:
