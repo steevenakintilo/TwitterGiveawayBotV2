@@ -598,7 +598,7 @@ class TwitterBot():
             first_time_dm = False
         
         if len(last_run) > 3:
-            target_date = datetime.strptime(last_run, "%d/%m/%Y")
+            target_date = datetime.strptime(last_run[0:10], "%d/%m/%Y")
             # Get today's date
             today = datetime.today()
 
@@ -623,26 +623,30 @@ class TwitterBot():
             write_into_file("all_run.txt",date_today+"\n")
 
         if first_time:
-            if self.login() is False:
-                if max_retry == 0:
-                    self.browser.close()
-                    self.start(1)
-                else:
-                    self.browser.close()
-                    return False
-
-            #CHECK OTP APRES
-
-            if self.otp_acc:
-                if self.set_otp_code(self.otp_code) is False:
+            check_login = self.is_login_good()
+            time.sleep(30)
+            if check_login == False:
+                if self.login() is False:
                     if max_retry == 0:
                         self.browser.close()
                         self.start(1)
                     else:
                         self.browser.close()
-                        send_message_discord(f"OTP error on login for https://x.com/{self.username}",self.discord_dict["list_of_login_error_channel"])
                         return False
 
+                #CHECK OTP APRES
+
+                if self.otp_acc:
+                    if self.set_otp_code(self.otp_code) is False:
+                        if max_retry == 0:
+                            self.browser.close()
+                            self.start(1)
+                        else:
+                            self.browser.close()
+                            send_message_discord(f"OTP error on login for https://x.com/{self.username}",self.discord_dict["list_of_login_error_channel"])
+                            return False
+            else:
+                first_time = True
 
         if self.is_login_good() is False:
             send_message_discord(f"Bad login for https://x.com/{self.username}",self.discord_dict["list_of_login_error_channel"])
