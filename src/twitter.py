@@ -723,6 +723,16 @@ class TwitterBot():
         else:
             split_list_nb = 1
         
+
+
+        check_login = self.is_login_good()
+        time.sleep(randint(20,40))
+        if check_login == False:
+            send_message_discord(f"{self.username} got locked during the run https://x.com/{self.username}",self.discord_dict["account_locked_during_run"])
+            print(f"{self.username} got locked during the run")
+            self.browser.close()
+            return False
+        
         shuffle(list_of_account_to_follow)
         for i , account in enumerate(list_of_account_to_follow):
             if i <= split_list_nb:
@@ -732,6 +742,16 @@ class TwitterBot():
                     self.follow_an_account(account,False)
 
 
+
+
+        check_login = self.is_login_good()
+        time.sleep(randint(20,40))
+        if check_login == False:
+            send_message_discord(f"{self.username} got locked during the run https://x.com/{self.username}",self.discord_dict["account_locked_during_run"])
+            print(f"{self.username} got locked during the run")
+            self.browser.close()
+            return False
+        
         # DO GIVEAWAY
         shuffle_list = []
         for i in range(len(list_of_tweet_url)):
@@ -798,6 +818,14 @@ class TwitterBot():
 
         shuffle(list_of_random_rt_tweet)
 
+        check_login = self.is_login_good()
+        time.sleep(randint(20,40))
+        if check_login == False:
+            send_message_discord(f"{self.username} got locked during the run https://x.com/{self.username}",self.discord_dict["account_locked_during_run"])
+            print(f"{self.username} got locked during the run")
+            self.browser.close()
+            return False
+        
         rt_done_list = []
         for i , random_rt in enumerate(list_of_random_rt_tweet):
             if random_rt.lower() not in random_rt_done and random_rt not in rt_done_list:
