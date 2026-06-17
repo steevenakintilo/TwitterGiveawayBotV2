@@ -1370,7 +1370,7 @@ def get_giveaway_draw_date(date_str, text):
         return date + timedelta(days=1)
     
     days_mapping = { 
-        "24h": 1, "16h": 1, "12h": 1, "1 jour": 1, "1 jours": 1, "1J": 1,
+        "24h": 1, "16h": 1, "12h": 1, "1 jour": 1, "1 jours": 1, "1J": 1,"tirage demain":1,
         "48h": 2, "2 jour": 2, "2 jours": 2, "2J": 2,
         "72h": 3, "3 jour": 3, "3 jours": 3, "3J": 3,
         "4 jour": 4, "4 jours": 4, "4J": 4,
@@ -1436,7 +1436,7 @@ def is_date_good(date_str,text):
     
     if "dans" in text.lower() or "jours" in text.lower() and "dans les commentaires" not in text.lower() and "dans les comm" not in text.lower():
         days_mapping = { 
-            "24h": 1, "16h": 1, "12h": 1, "24 heures": 1, "12 heures": 1, "16 heures": 1,
+            "24h": 1, "16h": 1, "12h": 1, "24 heures": 1, "12 heures": 1, "16 heures": 1,"tirage demain":1,
             "1 jour": 1, "à 12h": 1, "à 13h": 1, "à 14h": 1, "à 15h": 1, "à 16h": 1,
             "à 17h": 1, "à 18h": 1, "à 19h": 1, "à 20h": 1, "à 21h": 1, "1 jours": 1, "1jours": 1, "1 Jours": 1, "1J": 1,"1 J":1,
             "48h": 2, "36h": 2, "48 heures": 2, "36 heures": 2, "2 jour": 2, "2 jours": 2, "2jour": 2, "2jours": 2, "2J": 2,"2 J":2,
@@ -1761,7 +1761,7 @@ def get_giveaway_url(selenium_session,search=False):
             if print_data == False:
                 print("### " , search_word)
                 print("### nb of giveaway foud " , nb_of_giveaway_found , d.nb_of_giveaway)
-                time.sleep(20)
+                time.sleep(60)
             if nb_of_giveaway_found <d.nb_of_giveaway and "." not in search_word:
                 text = search_word + ' lang:'+d.tweet_lang + " min_faves:"+str(d.minimum_like) + " min_retweets:"+str(d.minimum_rt)+" since:"+str(remove_days(d.maximum_day)) + " " + "-filter:replies " + ban_word
                 if d.tweet_lang == "any":

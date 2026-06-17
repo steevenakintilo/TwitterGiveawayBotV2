@@ -644,12 +644,14 @@ class TwitterBot():
                         else:
                             self.browser.close()
                             send_message_discord(f"OTP error on login for https://x.com/{self.username}",self.discord_dict["list_of_login_error_channel"])
+                            
                             return False
             else:
                 first_time = True
 
         if self.is_login_good() is False:
             send_message_discord(f"Bad login for https://x.com/{self.username}",self.discord_dict["list_of_login_error_channel"])
+            
             self.browser.close()
             return False
 
@@ -796,11 +798,13 @@ class TwitterBot():
 
         shuffle(list_of_random_rt_tweet)
 
+        rt_done_list = []
         for i , random_rt in enumerate(list_of_random_rt_tweet):
-            if random_rt.lower() not in random_rt_done:
+            if random_rt.lower() not in random_rt_done and random_rt not in rt_done_list:
                 if self.retweet_a_tweet(random_rt):
                     write_into_file("random_rt_done.txt",random_rt.lower()+"\n")
                     print(f"Random retweet done {i + 1}/{len(list_of_random_rt_tweet)} {random_rt}")
+                    rt_done_list.append(random_rt)
 
 
         # self.retweet_a_tweet("https://x.com/L_ThinkTank/status/2063274599328948555")
@@ -810,5 +814,9 @@ class TwitterBot():
         # self.unfollow_an_account("L_ThinkTank")
         # self.follow_an_account("L_ThinkTank")
         print(f"Giveaway done on {self.username}")
+        try:
+            write_into_file("../../all_account_run.txt",self.username + " "  + date_today + "\n")
+        except:
+            pass
         self.browser.close()
         return True

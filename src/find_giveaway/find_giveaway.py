@@ -235,7 +235,7 @@ def main_one():
         for tweet in tweet_from_url:
             #rsend_message_discord(tweet,55)
             
-            if tweet in print_file_info("../txt_files_folder/allurl.txt"):
+            if tweet in print_file_info("../txt_files_folder/all_giveaway.txt"):
                 not_found +=1
                 continue
         
@@ -250,7 +250,7 @@ def main_one():
         for tweet in tweet_from_url:
             #rsend_message_discord(tweet,55)
             
-            if tweet in print_file_info("../txt_files_folder/allurl.txt"):
+            if tweet in print_file_info("../txt_files_folder/all_giveaway.txt"):
                 continue
             
             write_into_file("../txt_files_folder/all_giveaway.txt",f"{tweet} {today_date}"+"\n")
@@ -266,6 +266,7 @@ def main_one():
 
 
 
+    time.sleep(120)
     skip_random_rt = False
     if skip_random_rt == False and data["random_retweet_and_tweet"]:
         today_date = datetime.now().strftime("%Y:%m:%d")
