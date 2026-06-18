@@ -246,8 +246,7 @@ class TwitterBot():
                 time.sleep(60 * 15)
                 self.follow_an_account(account)
             write_into_file("follow_error.txt",account+"\n")
-            write_into_file("../txt_files_folder/ban_account.txt",account.lower()+"\n")
-
+            
             if print_error:
                 traceback.print_exc()
             return False
