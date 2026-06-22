@@ -219,14 +219,13 @@ class TwitterBot():
             if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username:
                 return True
             
-            print("opkpovredgpoefg")
             if account.lower() in self.list_of_account_you_follow:
                 print(f"SKIP {account} you already follow it")
                 return True
             
             your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
             if account.lower() in your_account_to_follow:
-                if randint(1,3) != 3:
+                if randint(1,10) != 10:
                     return True
             
             self.page.goto(f"https://x.com/{account}")
@@ -247,6 +246,9 @@ class TwitterBot():
 
             print(f"You have followed another account: {account}")
             self.random_stop()
+            self.random_stop()
+            self.random_stop()
+            
             write_into_file("list_of_account_you_follow.txt",account.lower()+"\n")
             return True
 
@@ -743,6 +745,8 @@ class TwitterBot():
             if len(print_file_content("giveaway_done.txt").lower().split("\n")) >= 0:
                 your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
                 for i , account in enumerate(your_account_to_follow):
+                    if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username:
+                        continue
                     print(f"Your own account {account} {i + 1}/{len(your_account_to_follow)}")
                     
                     follow = self.follow_an_account(account,False)
@@ -771,6 +775,9 @@ class TwitterBot():
         shuffle(list_of_account_to_follow)
         for i , account in enumerate(list_of_account_to_follow):
             if i <= split_list_nb:
+                if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username:
+                    continue
+                
                 print(f"User {account} {i + 1}/{len(list_of_account_to_follow)}")
                 follow = self.follow_an_account(account,False)
                 if follow is False:
@@ -827,6 +834,9 @@ class TwitterBot():
 
         for i , account in enumerate(list_of_account_to_follow):
             if i > split_list_nb:
+                if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username:
+                    continue
+                
                 print(f"User {account} {i + 1}/{len(list_of_account_to_follow)}")
                 follow = self.follow_an_account(account,False)
                 if follow is False:
