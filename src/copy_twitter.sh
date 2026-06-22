@@ -8,5 +8,6 @@ for d in */; do
           "$dir" != "find_giveaway" &&
           "$dir" != "__pycache__" ]]; then
         cp -f "twitter.py" "$dir/"
+        cp -f "global_variable.py" "$dir/"
     fi
 done

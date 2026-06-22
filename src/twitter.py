@@ -212,10 +212,12 @@ class TwitterBot():
                 traceback.print_exc()
             return False
 
-    def follow_an_account(self,account,print_error=False) -> bool:
+    def follow_an_account(self,account,print_error=False,random_nb=3) -> bool:
         """A function to follow an account"""
         try:
-            if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower():
+            if random_nb != 3:
+                return True
+            if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username():
                 return True
             if account.lower() in self.list_of_account_you_follow:
                 #print(f"SKIP {account} you already follow it")
@@ -274,11 +276,22 @@ class TwitterBot():
     def is_login_good(self) -> bool:
         """A function that check if the login went well"""
         try:
-            self.page.goto(f"https://x.com/{self.username}")
-            self.page.locator(EDIT_PROFILE_ATTRIBUTE).click(timeout=3000)
+            self.page.goto(f"https://x.com/{self.username}", wait_until="domcontentloaded")
+            time.sleep(randint(5,10))
+            
+            if self.page.viewport_size is None:
+                self.page.set_viewport_size({"width": 1280, "height": 720})
+                
+            try:
+                self.page.locator(EDIT_PROFILE_ATTRIBUTE).click(timeout=3000)
+            except:
+                self.page.locator(MAKE_A_POST_ATTRIBUTE).click(timeout=3000)
+                
             time.sleep(randint(1,5))
             return True
         except Exception as e:
+            traceback.print_exc()
+            
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
                 time.sleep(60 * 15)
                 self.is_login_good()
@@ -613,7 +626,8 @@ class TwitterBot():
             else:
                 if max_retry != 1 and len(print_file_content("giveaway_done.txt").lower().split("\n")) != 0:
                     print("Account already run not long time ago")
-                    return True
+                    #return True
+                
             
         else:
             first_time = True
@@ -715,6 +729,19 @@ class TwitterBot():
             self.browser.close()
             return
 
+        # FOLLOW ALL YOUR ACCOUNT
+        try:
+            if len(print_file_content("giveaway_done.txt").lower().split("\n")) >= 10:
+                your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
+                for i , account in enumerate(your_account_to_follow):
+                    print(f"Your own account {account} {i + 1}/{len(your_account_to_follow)}")
+                    random_nb = randint(1,3)
+                    follow = self.follow_an_account(account,False,random_nb)
+                    if follow is False:
+                        self.follow_an_account(account,False,random_nb)
+        except:
+            pass
+
         # FOLLOW PEOPLE PART 1
 
         if len(list_of_account_to_follow) > 1:
@@ -728,7 +755,7 @@ class TwitterBot():
         time.sleep(randint(20,40))
         if check_login == False:
             send_message_discord(f"{self.username} got locked during the run https://x.com/{self.username}",self.discord_dict["account_locked_during_run"])
-            print(f"{self.username} got locked during the run")
+            print(f"{self.username} got locked during the run 1")
             self.browser.close()
             return False
         
@@ -747,7 +774,7 @@ class TwitterBot():
         time.sleep(randint(20,40))
         if check_login == False:
             send_message_discord(f"{self.username} got locked during the run https://x.com/{self.username}",self.discord_dict["account_locked_during_run"])
-            print(f"{self.username} got locked during the run")
+            print(f"{self.username} got locked during the run 2")
             self.browser.close()
             return False
         
@@ -821,7 +848,7 @@ class TwitterBot():
         time.sleep(randint(20,40))
         if check_login == False:
             send_message_discord(f"{self.username} got locked during the run https://x.com/{self.username}",self.discord_dict["account_locked_during_run"])
-            print(f"{self.username} got locked during the run")
+            print(f"{self.username} got locked during the run 3")
             self.browser.close()
             return False
         

@@ -38,13 +38,14 @@ class TwitterBot():
         self.password = self.data2["account_password"][0]
         self.today_date = datetime.now().date()
 
-        self.browser = launch_persistent_context(user_data_dir=f"./{self.username}",geoip=True,headless=False,humanize=True)
+        current_directory = os.getcwd()
+        currentDir = current_directory.split("\\")[-1]
+        
+        self.browser = launch_persistent_context(user_data_dir=f"./{currentDir}",geoip=True,headless=False,humanize=True)
         self.page = self.browser.new_page()
         
         self.otp_accounts = print_file_content("../../otp_acc.txt").lower().replace("\t"," ").strip().split("\n")
         self.list_of_account_you_follow = print_file_content("list_of_account_you_follow.txt").lower().split("\n")
-        current_directory = os.getcwd()
-        currentDir = current_directory.split("\\")[-1]
         self.print_error = False
 
         self.otp_acc = False
@@ -62,19 +63,21 @@ class TwitterBot():
         if self.username == "test_account":
             self.username = currentDir
 
-    def start(self,max_retry=0) -> bool:
+    def start(self) -> bool:
         """A function to start the bot"""
         print(f"Hello {self.username}")
         self.page.goto(TWITTER_LOGIN_PAGE_URL)
 
-        date_today = datetime.now().strftime("%d/%m/%Y")
-        write_into_file("last_run.txt",date_today)
-        write_into_file("all_run.txt",date_today+"\n")
-
+        #date_today = datetime.now().strftime("%d/%m/%Y")
+        #reset_file("last_run.txt")
+        
         #url_to_test = "https://x.com/L_ThinkTank/status/2063274599328948555"
 
+        #time.sleep(3600)
         time.sleep(600)
         self.browser.close()
+
+        
         
 
 config = TwitterBot()
