@@ -212,16 +212,22 @@ class TwitterBot():
                 traceback.print_exc()
             return False
 
-    def follow_an_account(self,account,print_error=False,random_nb=3) -> bool:
+    def follow_an_account(self,account,print_error=False) -> bool:
         """A function to follow an account"""
         try:
-            if random_nb != 3:
+            
+            if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username:
                 return True
-            if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username():
-                return True
+            
             if account.lower() in self.list_of_account_you_follow:
-                #print(f"SKIP {account} you already follow it")
+                print(f"SKIP {account} you already follow it")
                 return True
+            
+            your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
+            if account.lower() in your_account_to_follow:
+                if randint(1,3) != 3:
+                    return True
+            
             self.page.goto(f"https://x.com/{account}")
             # try:
             #     self.page.locator(UNFOLLOW_AN_ACCOUNT_ATTRIBUTE).wait_for(timeout=3000)
@@ -247,7 +253,9 @@ class TwitterBot():
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
                 time.sleep(60 * 15)
                 self.follow_an_account(account)
-            write_into_file("follow_error.txt",account+"\n")
+            
+            if account.lower() not in print_file_content("follow_error.txt").lower():
+                write_into_file("follow_error.txt",account+"\n")
             
             if print_error:
                 traceback.print_exc()
@@ -626,7 +634,7 @@ class TwitterBot():
             else:
                 if max_retry != 1 and len(print_file_content("giveaway_done.txt").lower().split("\n")) != 0:
                     print("Account already run not long time ago")
-                    #return True
+                    return True
                 
             
         else:
@@ -719,8 +727,8 @@ class TwitterBot():
                         self.unlike_a_tweet(giv)
                         self.like_a_tweet(giv)
                         self.random_stop()
-                        self.unretweet_a_tweet(giv,False)
-                        self.retweet_a_tweet(giv,False)
+                        self.unretweet_a_tweet(giv,True)
+                        self.retweet_a_tweet(giv,True)
                         self.random_stop()
                         done_giveaway.append(giv)
 
@@ -731,14 +739,14 @@ class TwitterBot():
 
         # FOLLOW ALL YOUR ACCOUNT
         try:
-            if len(print_file_content("giveaway_done.txt").lower().split("\n")) >= 10:
+            if len(print_file_content("giveaway_done.txt").lower().split("\n")) >= 0:
                 your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
                 for i , account in enumerate(your_account_to_follow):
                     print(f"Your own account {account} {i + 1}/{len(your_account_to_follow)}")
-                    random_nb = randint(1,3)
-                    follow = self.follow_an_account(account,False,random_nb)
+                    
+                    follow = self.follow_an_account(account,False)
                     if follow is False:
-                        self.follow_an_account(account,False,random_nb)
+                        self.follow_an_account(account,False)
         except:
             pass
 
@@ -853,6 +861,15 @@ class TwitterBot():
             return False
         
         rt_done_list = []
+        if len(list_of_tweet_url) <= 4:
+            nb = randint(10,15)
+            if nb < len(list_of_random_rt_tweet):
+                list_of_random_rt_tweet = list_of_random_rt_tweet[0:nb]
+        elif len(list_of_tweet_url) < 10:
+            nb = randint(20,30)
+            if nb < len(list_of_random_rt_tweet):
+                list_of_random_rt_tweet = list_of_random_rt_tweet[0:nb]
+    
         for i , random_rt in enumerate(list_of_random_rt_tweet):
             if random_rt.lower() not in random_rt_done and random_rt not in rt_done_list:
                 if self.retweet_a_tweet(random_rt):
