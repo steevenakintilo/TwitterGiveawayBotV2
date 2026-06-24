@@ -254,7 +254,7 @@ def search_tweet(selenium_session,query="hello",nb_of_tweet_to_search=10,sss=0):
                 element = WebDriverWait(selenium_session.driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="tweet"]')))
             except:
-                print("error searching tweet sleep for 30 sec")
+                #print("error searching tweet sleep for 30 sec")
                 time.sleep(5)
                 try:
                     selenium_session.driver.get(current_url+"&f=live")
@@ -356,22 +356,6 @@ def search_tweet(selenium_session,query="hello",nb_of_tweet_to_search=10,sss=0):
         time.sleep(3)
         return(data_list)
 
-def send_message_discord(msg):
-    try:
-        urls = "https://discord.com/api/webhooks/1194945640392835102/oqtcZlNwcTo-3DI-MV-mqTmKAeWFhiQoQmoLPRIjKLHeL7aqg33JQ7aONE-e6LPW22QL"
-        webhook = DiscordWebhook(url=urls, content=msg)
-        response = webhook.execute()
-    except:
-        pass
-
-def sssend_message_discord(msg):
-    try:
-        urls = "https://discord.com/api/webhooks/1346210400978337832/JXAYC-fC-zYWUm2wAIGP5hmlPOr3zl92JgIJmf-DBqqsXOc3M21RIJP2X0SRJIC4lRrX"
-        webhook = DiscordWebhook(url=urls, content=msg)
-        response = webhook.execute()
-    except:
-        pass
-
 def search_tweets(selenium_session,query="hello",nb_of_tweet_to_search=10,recent=False):
     start_time = time.time()  # Start the timer
     list_of_tweet_url = []
@@ -439,7 +423,7 @@ def search_tweets(selenium_session,query="hello",nb_of_tweet_to_search=10,recent
             error_checker.append(element)
             for e in error_checker:
                 if error_checker.count(e) >= nbE:
-                    send_message_discord(f"{username_info}\n got rt problem with thise search: {query} \n Replace those words/account!!! \n +++++++")        
+                    #send_message_discord(f"{username_info}\n got rt problem with thise search: {query} \n Replace those words/account!!! \n +++++++")        
                     print("Idxxxx value " , idxxx)
                     return data_list
             tweets_info = selenium_session.driver.find_elements(By.CSS_SELECTOR, '[data-testid="tweet"]')
@@ -970,7 +954,7 @@ def search_tweet_for_better_rt(selenium_session):
                         else:
                             if t["url"] not in already_rt:
                                 url_list.append(t["url"])
-                                write_into_file("../txt_files_folder/all_randomrt.txt",t["url"]+"\n")
+                                #write_into_file("../txt_files_folder/all_randomrt.txt",t["url"]+"\n")
                     
 
                     print("not enough kaizen tweet found will search more")
@@ -1865,8 +1849,10 @@ def get_giveaway_url(selenium_session,search=False):
                                 right_date = is_date_good(str(g["date"].split(" ")[0]),striiing)
                                 try:
                                     draw_url = print_file_info("../txt_files_folder/drawDate.txt").lower().split("\n")
+                                    draw_url2 = print_file_info("../txt_files_folder/drawDate.txt").lower()
+                                    
                                     draw_date_ = get_giveaway_draw_date(str(g["date"].split(" ")[0]),striiing)
-                                    if draw_date_ != None and g["url"].lower() not in draw_url:
+                                    if draw_date_ != None and g["url"].lower() not in draw_url2:
                                         write_into_file("../txt_files_folder/drawDate.txt",str(draw_date_) + " " + g["url"]+"\n")
                                         draw_date_list.append(str(draw_date_))
                                     
@@ -1926,8 +1912,10 @@ def get_giveaway_url(selenium_session,search=False):
                                     right_date = is_date_good(str(g["date"].split(" ")[0]),striiing)
                                     try:
                                         draw_url = print_file_info("../txt_files_folder/drawDate.txt").lower().split("\n")
+                                        draw_url2 = print_file_info("../txt_files_folder/drawDate.txt").lower()
+                                        
                                         draw_date_ = get_giveaway_draw_date(str(g["date"].split(" ")[0]),striiing)
-                                        if draw_date_ != None and g["url"].lower() not in draw_url:
+                                        if draw_date_ != None and g["url"].lower() not in draw_url2:
                                             write_into_file("../txt_files_folder/drawDate.txt",str(draw_date_) + " " + g["url"]+"\n")
                                     except:
                                         traceback.print_exc()

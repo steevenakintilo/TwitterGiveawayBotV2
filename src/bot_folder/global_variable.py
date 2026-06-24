@@ -27,6 +27,7 @@ FOLLOW_AN_ACCOUNT_ATTRIBUTE = 'xpath=//*[@id="react-root"]/div/div/div[2]/main/d
 UNFOLLOW_AN_ACCOUNT_ATTRIBUTE = 'xpath=/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[1]/div[2]/button[3]'
 UNFOLLOW_AN_ACCOUNT_CONFIRM_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[2]/div/div/div/div[2]/div/div[3]/div/div/div/div'
 EDIT_PROFILE_ATTRIBUTE = '[data-testid="editProfileButton"]'
+MAKE_A_POST_ATTRIBUTE = '[data-testid="SideNav_NewTweet_Button"]'
 FORGOT_PIN_ATTRIBUTE = '[data-testid="pin-forgot-pin"]'
 CREATE_A_PASSCODE_ATTRIBUTE = '[data-testid="pin-onboarding-setup-now"]'
 CODEPASS_TEXTBOX_ATTRIBUTE = '[data-testid="pin-code-input-container"]'
