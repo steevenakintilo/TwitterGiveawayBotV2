@@ -41,6 +41,8 @@ NEW_DM_ATTRIBUTE = 'xpath=//*[@id="react-root"]/div/div/div[2]/header/div/div/di
 OTP_CODE_TEXTBOX_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div[1]/form/div[1]/div[2]/div[2]/div/div/div/div[2]/div/div/fieldset/div'
 #UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button/div'
 UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button'
+COMMENT_A_POST_ATTRIBUTE = "input[data-testid='fileInput']"
+
 # Variable
 
 WAIT_TIME_BEFORE_TIMEOUT = 1

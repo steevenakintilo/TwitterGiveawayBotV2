@@ -212,6 +212,44 @@ class TwitterBot():
                 traceback.print_exc()
             return False
 
+    def comment_a_tweet_with_a_picture(self,url,text,filepath,load_page=True,print_error=False) -> bool:
+        """A function to comment a tweet"""
+        try:
+            if len(text) == 0:
+                return True
+            if load_page:
+                self.page.goto(url)
+            
+
+            time.sleep(2)
+            self.page.locator(COMMENT_TEXTBOX_ATTRIBUTE).click()
+            time.sleep(5)
+            self.page.set_input_files(COMMENT_A_POST_ATTRIBUTE, filepath)
+            time.sleep(5)
+            time.sleep(randint(1,15))
+            
+            #self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).click()
+            self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).fill(text)
+            time.sleep(randint(1,5))
+            time.sleep(5)
+
+            
+            self.page.locator(POST_A_TWEET_BUTTON_ATTRIBUTE).click()
+            #self.random_stop()
+            time.sleep(randint(10,15))
+            return True
+
+        except Exception as e:
+            traceback.print_exc()
+            
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.comment_a_tweet(url,text,load_page)
+
+            if print_error:
+                traceback.print_exc()
+            return False
+
     def follow_an_account(self,account,print_error=False) -> bool:
         """A function to follow an account"""
         try:
@@ -225,7 +263,7 @@ class TwitterBot():
             
             your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
             if account.lower() in your_account_to_follow:
-                if randint(1,10) != 10:
+                if randint(1,4) != 10:
                     return True
             
             self.page.goto(f"https://x.com/{account}")
@@ -722,15 +760,15 @@ class TwitterBot():
         bad_giveaway = print_file_content("../txt_files_folder/ban_giveaway.txt").lower()
         giveaway_done = print_file_content("giveaway_done.txt").lower().split("\n")
 
-        if len(today_giveaway) > 0:
+        if len(today_giveaway) > 99990:
             for giv in today_giveaway:
                 print(f"Giveaway to redo today: {giv}")
                 if giv not in bad_giveaway:
                     if giv in giveaway_done:
                         self.unlike_a_tweet(giv)
-                        self.like_a_tweet(giv)
-                        self.random_stop()
                         self.unretweet_a_tweet(giv,True)
+                        self.random_stop()
+                        self.like_a_tweet(giv)
                         self.retweet_a_tweet(giv,True)
                         self.random_stop()
                         done_giveaway.append(giv)
@@ -745,7 +783,7 @@ class TwitterBot():
             if len(print_file_content("giveaway_done.txt").lower().split("\n")) >= 0:
                 your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
                 for i , account in enumerate(your_account_to_follow):
-                    if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username:
+                    if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username or account.lower() in self.list_of_account_you_follow:
                         continue
                     print(f"Your own account {account} {i + 1}/{len(your_account_to_follow)}")
                     
@@ -806,6 +844,40 @@ class TwitterBot():
                 skip+=1
 
         giveaway_nb = 0
+        
+
+        comment_a_post_with_piture = True
+        list_of_pic_giveaway = [
+        "https://x.com/Cdiscount/status/2070447275575595161",
+        "https://x.com/Cdiscount/status/2069665592836268371"
+        ]
+        for giveaway in list_of_pic_giveaway:
+            if giveaway.lower() not in giveaway_done and comment_a_post_with_piture:
+                try:
+                    list_of_picture_filepath = r"C:\Users\sakin\Desktop\code\TwitterGiveawayBotV2\picture_path"
+                    list_of_picture = os.listdir(list_of_picture_filepath)
+                    shuffle(list_of_picture)
+                    random_picture = rf"{list_of_picture_filepath}\{list_of_picture[0]}"
+                    like = self.like_a_tweet(giveaway)
+                    if like is False:
+                        like = self.like_a_tweet(giveaway,False)
+
+
+                    retweet = self.retweet_a_tweet(giveaway,False)
+                    if retweet is False:
+                        retweet = self.retweet_a_tweet(giveaway,True,False)
+
+                    comment = True
+                    comment = self.comment_a_tweet_with_a_picture(giveaway,"#CdiscountSoldes " , random_picture,True,False)
+                    if comment is False:
+                        comment = self.comment_a_tweet_with_a_picture(giveaway,"#CdiscountSoldes " , random_picture,True,False)
+
+                    if like and retweet and comment:
+                        write_into_file("giveaway_done.txt",giveaway.lower()+"\n")
+                    
+                except:
+                    print("Comment a tweet with picture error")
+                
         for i , giveaway in enumerate(list_of_tweet_url):
             giveaway = list_of_tweet_url[shuffle_list[i]]
             if giveaway.lower() not in giveaway_done and skip_this_giveaway[shuffle_list[i]] is not True and giveaway.lower() not in done_giveaway and giveaway.lower() not in bad_giveaway:
