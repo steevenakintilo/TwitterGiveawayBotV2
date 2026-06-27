@@ -760,7 +760,7 @@ class TwitterBot():
         bad_giveaway = print_file_content("../txt_files_folder/ban_giveaway.txt").lower()
         giveaway_done = print_file_content("giveaway_done.txt").lower().split("\n")
 
-        if len(today_giveaway) > 99990:
+        if len(today_giveaway) > 0:
             for giv in today_giveaway:
                 print(f"Giveaway to redo today: {giv}")
                 if giv not in bad_giveaway:
@@ -870,7 +870,8 @@ class TwitterBot():
                     comment = True
                     comment = self.comment_a_tweet_with_a_picture(giveaway,"#CdiscountSoldes " , random_picture,True,False)
                     if comment is False:
-                        comment = self.comment_a_tweet_with_a_picture(giveaway,"#CdiscountSoldes " , random_picture,True,False)
+                        time.sleep(randint(1,10))
+                        comment = self.comment_a_tweet(giveaway,"#CdiscountSoldes Merci" ,True,False)
 
                     if like and retweet and comment:
                         write_into_file("giveaway_done.txt",giveaway.lower()+"\n")
