@@ -196,7 +196,7 @@ class TwitterBot():
                 self.page.goto(url)
             #self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).click()
             self.page.locator(COMMENT_TEXTBOX_ATTRIBUTE).click()
-            self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).fill(text)
+            self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).fill("   " + text.replace("\n"," "))
             time.sleep(randint(1,5))
             self.page.locator(POST_A_TWEET_BUTTON_ATTRIBUTE).click()
             #self.random_stop()
@@ -229,7 +229,7 @@ class TwitterBot():
             time.sleep(randint(1,15))
             
             #self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).click()
-            self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).fill(text)
+            self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).fill("   " + text.replace("\n"," "))
             time.sleep(randint(1,5))
             time.sleep(5)
 
@@ -263,7 +263,7 @@ class TwitterBot():
             
             your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
             if account.lower() in your_account_to_follow:
-                if randint(1,4) != 10:
+                if randint(1,10) != 10:
                     return True
             
             self.page.goto(f"https://x.com/{account}")
@@ -813,7 +813,7 @@ class TwitterBot():
         shuffle(list_of_account_to_follow)
         for i , account in enumerate(list_of_account_to_follow):
             if i <= split_list_nb:
-                if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username:
+                if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username or account.lower() in self.list_of_account_you_follow:
                     continue
                 
                 print(f"User {account} {i + 1}/{len(list_of_account_to_follow)}")
@@ -907,7 +907,7 @@ class TwitterBot():
 
         for i , account in enumerate(list_of_account_to_follow):
             if i > split_list_nb:
-                if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username:
+                if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username or account.lower() in self.list_of_account_you_follow:
                     continue
                 
                 print(f"User {account} {i + 1}/{len(list_of_account_to_follow)}")
