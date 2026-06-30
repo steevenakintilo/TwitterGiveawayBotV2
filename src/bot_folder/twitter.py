@@ -190,6 +190,8 @@ class TwitterBot():
     def comment_a_tweet(self,url,text,load_page=True,print_error=False) -> bool:
         """A function to comment a tweet"""
         try:
+            if url.lower() in print_file_content("giveaway_done.txt").lower().split("\n"):
+                return True
             if len(text) == 0:
                 return True
             if load_page:

@@ -140,9 +140,11 @@ class TwitterBot():
             
             return False
 
-    def retweet_a_tweet(self,url,load_page=True,print_error=False) -> bool:
+    def retweet_a_tweet(self,url,load_page=True,print_error=False,random_rt=False) -> bool:
         """A function to retweet a tweet"""
         try:
+            if random_rt and url.lower() in print_file_content("random_rt_done.txt").lower().split("\n"):
+                return True
             if load_page:
                 self.page.goto(url)
             self.page.locator(RETWEET_A_TWEET_ATTRIBUTE).click()
@@ -190,6 +192,8 @@ class TwitterBot():
     def comment_a_tweet(self,url,text,load_page=True,print_error=False) -> bool:
         """A function to comment a tweet"""
         try:
+            if url.lower() in print_file_content("giveaway_done.txt").lower().split("\n"):
+                return True
             if len(text) == 0:
                 return True
             if load_page:
@@ -772,6 +776,10 @@ class TwitterBot():
                         self.random_stop()
                         done_giveaway.append(giv)
 
+
+
+        write_into_file("../../list_of_all_run.txt",f"{self.username} {date_today}")
+                
         if len(list_of_account_to_follow) == 0 and len(done_giveaway) == 0:
             print("No giveaway found bye")
             self.browser.close()
@@ -953,7 +961,7 @@ class TwitterBot():
     
         for i , random_rt in enumerate(list_of_random_rt_tweet):
             if random_rt.lower() not in random_rt_done and random_rt not in rt_done_list:
-                if self.retweet_a_tweet(random_rt):
+                if self.retweet_a_tweet(random_rt,True,False,True):
                     write_into_file("random_rt_done.txt",random_rt.lower()+"\n")
                     print(f"Random retweet done {i + 1}/{len(list_of_random_rt_tweet)} {random_rt}")
                     rt_done_list.append(random_rt)
