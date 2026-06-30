@@ -7,6 +7,7 @@
 TWITTER_LOGIN_PAGE_URL = "https://x.com"
 TWEET_TO_SEE_AFTER_LOGIN = "https://x.com/Holtadjust/status/2063281449898274862"
 DM_PAGE = "https://x.com/i/chat"
+SEARCH_TWEET_URL = "https://x.com/explore"
 
 # Element Attribute
 
@@ -43,7 +44,39 @@ OTP_CODE_TEXTBOX_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[2]/div/div/div/div/div
 #UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button/div'
 UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button'
 COMMENT_A_POST_ATTRIBUTE = "input[data-testid='fileInput']"
+SEARCHBOX_ATTRIBUTE = "input[data-testid='SearchBox_Search_Input']"
+TWEET_ATTRIBUTE = "[data-testid='tweet']"
 
 # Variable
 
 WAIT_TIME_BEFORE_TIMEOUT = 1
+
+# LIST_OF_WIN_KEYWORD = """remporte le concours
+# remporte le concours
+# Félicitations au gagnant
+# Félicitations aux gagnants
+# gagnants
+# gagnant
+# qui gagne
+# il gagne
+# tu gagnes
+# congrats
+# Félicitation
+# Félicitations
+# gg à
+# twitterpicker
+# winners 
+# winner
+# bravo
+# lot
+# remporte
+# qui win 
+# a win
+# qui gagne
+# Félicitation!
+# Félicitation!!
+# 🏆
+# winners 🏆
+# XPicker""".lower().split("\n")
+
+

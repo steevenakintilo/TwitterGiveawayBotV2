@@ -1,0 +1,36 @@
+#Account info write the username of your account
+account_username:
+  - ""
+#Account info write the password of your account
+account_password:
+  - ""
+
+# All keywords that could be use if you won a giveaway
+win_keywords:
+  - remporte le concours
+  - remporte le concours
+  - Félicitations au gagnant
+  - Félicitations aux gagnants
+  - gagnants
+  - gagnant
+  - qui gagne
+  - il gagne
+  - tu gagnes
+  - congrats
+  - Félicitation
+  - Félicitations
+  - gg à
+  - twitterpicker
+  - winners
+  - winner
+  - bravo
+  - lot
+  - remporte
+  - qui win
+  - a win
+  - qui gagne
+  - Félicitation!
+  - Félicitation!!
+  - 🏆
+  - winners 🏆
+  - XPicker

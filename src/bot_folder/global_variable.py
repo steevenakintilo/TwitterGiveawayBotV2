@@ -13,6 +13,7 @@ DM_PAGE = "https://x.com/i/chat"
 USERNAME_OR_EMAIL_ATTRIBUTE = "#jf-input-username_or_email"
 PASSWORD_ATTRIBUTE = "#jf-input-password"
 BUTTON_SUBMIT_ATTRIBUTE = "button[type=submit]"
+BUTTON_SUBMIT_ATTRIBUTE2 = 'xpath=//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div[1]/form/div[2]/div/button'
 ACCEPT_COOKIE_ATTRIBUTE = 'xpath=//*[@id="layers"]/div/div[3]/div/div/div/div[2]/button[1]'
 LIKE_A_TWEET_ATTRIBUTE = '[data-testid="like"]'
 UNLIKE_A_TWEET_ATTRIBUTE = '[data-testid="unlike"]'

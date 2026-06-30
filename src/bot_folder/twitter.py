@@ -76,7 +76,7 @@ class TwitterBot():
             # return True
             #self.page.locator(PASSWORD_ATTRIBUTE).press("Enter")
 
-            self.page.locator(BUTTON_SUBMIT_ATTRIBUTE).click()
+            self.page.locator(BUTTON_SUBMIT_ATTRIBUTE2).click()
 
             return True
         except Exception as e:
@@ -219,7 +219,6 @@ class TwitterBot():
                 return True
             if load_page:
                 self.page.goto(url)
-            
 
             time.sleep(2)
             self.page.locator(COMMENT_TEXTBOX_ATTRIBUTE).click()
@@ -227,13 +226,13 @@ class TwitterBot():
             self.page.set_input_files(COMMENT_A_POST_ATTRIBUTE, filepath)
             time.sleep(5)
             time.sleep(randint(1,15))
-            
+
             #self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).click()
             self.page.locator(COMMENT_A_TWEET_ATTRIBUTE).fill("   " + text.replace("\n"," "))
             time.sleep(randint(1,5))
             time.sleep(5)
 
-            
+
             self.page.locator(POST_A_TWEET_BUTTON_ATTRIBUTE).click()
             #self.random_stop()
             time.sleep(randint(10,15))
@@ -773,7 +772,7 @@ class TwitterBot():
                         self.random_stop()
                         done_giveaway.append(giv)
 
-        if len(list_of_account_to_follow) == 0:
+        if len(list_of_account_to_follow) == 0 and len(done_giveaway) == 0:
             print("No giveaway found bye")
             self.browser.close()
             return
@@ -846,10 +845,8 @@ class TwitterBot():
         giveaway_nb = 0
         
 
-        comment_a_post_with_piture = True
+        comment_a_post_with_piture = False
         list_of_pic_giveaway = [
-        "https://x.com/Cdiscount/status/2070447275575595161",
-        "https://x.com/Cdiscount/status/2069665592836268371"
         ]
         for giveaway in list_of_pic_giveaway:
             if giveaway.lower() not in giveaway_done and comment_a_post_with_piture:
@@ -945,11 +942,11 @@ class TwitterBot():
             return False
         
         rt_done_list = []
-        if len(list_of_tweet_url) <= 4:
+        if len(done_giveaway) <= 4:
             nb = randint(10,15)
             if nb < len(list_of_random_rt_tweet):
                 list_of_random_rt_tweet = list_of_random_rt_tweet[0:nb]
-        elif len(list_of_tweet_url) < 10:
+        elif len(done_giveaway) < 10:
             nb = randint(20,30)
             if nb < len(list_of_random_rt_tweet):
                 list_of_random_rt_tweet = list_of_random_rt_tweet[0:nb]

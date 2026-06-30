@@ -5,6 +5,8 @@ import os
 import time
 
 import platform
+import traceback
+import yaml
 
 from discord_webhook import DiscordWebhook
 
@@ -17,6 +19,9 @@ class bot_launcher():
     def __init__(self):
         self.group_of_the_day = int(self.print_file_content("group_of_the_day.txt")[0])
 
+        with open("configuration.yml", "r",encoding="utf-8") as file:
+            self.data = yaml.load(file, Loader=yaml.FullLoader)
+        
         with open("discord_data_dict.json", "r", encoding="utf-8") as file:
             self.discord_dict = json.load(file)
 
@@ -82,18 +87,18 @@ class bot_launcher():
         # Launch All bot
         self.send_message_discord("-"*20,self.discord_dict["list_of_account_time_statistics"])
         self.send_message_discord("Hello World",self.discord_dict["list_of_account_time_statistics"])
-        
+
         search_giveaway = True
         if search_giveaway:
             os.system("cd src/find_giveaway && python find_giveaway.py")
-        
 
         empty_space = "‎"
         self.send_message_discord(f"{empty_space}\n"*3,self.discord_dict["list_of_account_time_statistics"])
-        
+
         self.send_message_discord(f"Starting giveaway on account of group {self.group_of_the_day}",self.discord_dict["list_of_account_time_statistics"])
         account_of_the_day = self.print_file_content(f"account_of_groupe{str(self.group_of_the_day)}_name.txt").split("\n")
         for bot in account_of_the_day:
+            
             if bot not in folder_to_skip:
                 index+=1
                 print(bot)
@@ -122,9 +127,11 @@ class bot_launcher():
             self.send_message_discord(f"List of giveaway done today {len(self.print_file_content("list_of_giveaway_done_today.txt").split("\n")) - 1}",self.discord_dict["list_of_account_time_statistics"])
             self.send_message_discord(f"List of all giveaway done {len(self.print_file_content("list_of_all_giveaway_done.txt").split("\n")) - 1}",self.discord_dict["list_of_account_time_statistics"])
         except:
-            import traceback
             traceback.print_exc()
 
         self.reset_file("list_of_giveaway_done_today.txt")
+        if self.data["search_for_win"]:
+            os.system("cd src/check_for_win_bot && python main.py")
+
         print(f"It took {hours} hours, {minutes} minutes, and {remaining_seconds} seconds.")
         self.send_message_discord(f"It took {hours} hours, {minutes} minutes, and {remaining_seconds} seconds.",self.discord_dict["list_of_account_time_statistics"])
