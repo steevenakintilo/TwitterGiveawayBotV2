@@ -27,7 +27,7 @@ Link to download google chrome: https://www.google.com/intl/fr_fr/chrome/
 
 If you Google Chrome isn't updated to the latest version the bot may won't work!
 
-You should also add 5 discord weebhooks (and store their credentials into discord_data_dict.json file) to get valuable information about your accounts in your discord server.
+You should also add 6 discord weebhooks (and store their credentials into discord_data_dict.json file) to get valuable information about your accounts in your discord server.
 
 Here is how to do a discord webhook: https://www.svix.com/resources/guides/how-to-make-webhook-discord/
 
@@ -71,6 +71,7 @@ If the bot failed to launch after several just make an issues I will help you ma
 - The bot can work with 1,2,20 or even 100 accounts you just have to add them in the src folder.
 - The bot is flexible you can modify most of its features on the configuration.yml file
 - Redo a giveaway (Unlike,Like,Unretweet,Retweet a post) the day of the draw to maximise your chance to be the most recent participants.
+- Run a script that checks if your accounts have won giveaways by looking through the search bar for all of them.
 - Send key information to your own discord server to see what the bot is doing
 
 ## How does it works 
@@ -90,6 +91,7 @@ So for example on day one it could do something like this:
 - Account X search for giveaways/random tweets to retweet
 - Store all the information into .txt files
 - Loop through all account to do giveaway on those acccounts 1 by 1
+- Run the script that checks if one of your accounts has won a giveaway.
 - End
 
 Since accounts run every 3 days you only need to run the code once a day and it's better to run it in the morning.
@@ -163,6 +165,10 @@ At the end of the running process it will do a summary of all the giveaways done
 - "new_dm_channel" this channel will send a picture of the dm of an account if he got a new dm and possibly won a new giveaway.
 
 - "list_of_login_error_channel" this channel will send a message if an account failed to login with the name of the account.
+
+- "giveaway_won_channel" this channel will send a message if one of your account have won a giveaway.
+
+
 
 
 ## How to add accounts?
