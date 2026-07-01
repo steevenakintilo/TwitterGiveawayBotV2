@@ -98,19 +98,6 @@ def send_message_discord(msg,url_name):
     except:
         pass
 
-def rsend_message_discord(msg,nb=0):
-    try:
-        urls = print_file_info("webhook_url.txt").split("\n")[nb - 1]
-        if nb == 100:
-            urls = "https://discord.com/api/webhooks/1279605659846971464/lsjQH4FSUC01XUL_9dGlKDJZ6qAiBUc8tgRX-vRsIKqevlW9MB9bvBChTr4N85buvjN1"
-        if nb == 55:
-            urls = "https://discord.com/api/webhooks/1457133829348397208/p-8cW66KPCOoTGlWJ-ztLap3E-_XczwDrZFl2N_Klb3fOO79YhnIdlT8_Z82d99liwDR"
-        webhook = DiscordWebhook(url=urls, content=msg)
-        response = webhook.execute()
-    except:
-        pass
-
-
 
 def reset_file(path):  
     try:
