@@ -430,8 +430,8 @@ class TwitterBot():
 
             self.change_information(new_name,new_bio,new_location)
 
-            profile_picture_dir = r""
-            banner_dir = r""
+            profile_picture_dir = r"C:\Users\sakin\Music\zzzzzzzzzPhoto\photo_de_profile_ok"
+            banner_dir = r"C:\Users\sakin\Music\zzzzzzzzzPhoto\bannieres_ok"
             random_profile_picture_path = rf"{profile_picture_dir}\{os.listdir(profile_picture_dir)[0]}"
             random_banner_path = rf"{banner_dir}\{os.listdir(banner_dir)[0]}"
 
@@ -465,6 +465,13 @@ class TwitterBot():
         self.del_first_line("../../random_city.txt")
         self.del_first_line("../../random_name.txt")
         self.del_first_line("../order.txt")
+        try:
+            group_of_the_day = int(print_file_content("../../group_of_the_day.txt")[0])
+            write_into_file("all_acc.txt",new_username+"\n")
+            write_into_file("otp_acc.txt",new_username+" " + self.otp_code + "\n")
+            write_into_file(f"account_of_groupe{group_of_the_day}_name.txt",new_username+"\n")
+        except:
+            pass
         self.browser.close()
         return True
 

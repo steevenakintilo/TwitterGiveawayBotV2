@@ -71,6 +71,7 @@ class bot_launcher():
 
     def start(self) -> None:
         """A function that will start all the bot"""
+        os.system("pip install --upgrade cloakbrowser")
         start = time.time()
         folder_to_skip = [
             "bot_folder",
