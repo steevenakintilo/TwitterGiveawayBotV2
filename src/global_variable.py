@@ -8,6 +8,13 @@ TWITTER_LOGIN_PAGE_URL = "https://x.com"
 TWEET_TO_SEE_AFTER_LOGIN = "https://x.com/Holtadjust/status/2063281449898274862"
 DM_PAGE = "https://x.com/i/chat"
 
+# ---
+CHANGE_PASSWORD_PAGE = "https://x.com/settings/password"
+CHANGE_USERNAME_PAGE = "https://x.com/settings/screen_name"
+CHANGE_PROFILE_PAGE = "https://x.com/settings/profile"
+CHECK_IF_ACCOUNT_IS_PRIVATE_PAGE = "https://x.com/settings/audience_and_tagging"
+CHANGE_LANGUAGE_PAGE = "https://x.com/i/flow/uls_content_and_app_language_selector"
+
 # Element Attribute
 
 USERNAME_OR_EMAIL_ATTRIBUTE = "#jf-input-username_or_email"
@@ -44,6 +51,26 @@ OTP_CODE_TEXTBOX_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[2]/div/div/div/div/div
 UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button'
 COMMENT_A_POST_ATTRIBUTE = "input[data-testid='fileInput']"
 
+
+# ---
+CONFIRM_PASSWORD_ATTRIBUTE = '[name="current_password"]'
+CHOOSE_NEW_PASSWORD_ATTRIBUTE = '[name="new_password"]'
+CONFIRM_NEW_PASSWORD_ATTRIBUTE = '[name="password_confirmation"]'
+SAVE_SETTING_BUTTON_ATTRIBUTE = '[data-testid="settingsDetailSave"]'
+SUBMIT_BUTTON_ATTRIBUTE = 'xpath=//*[@id="react-root"]/div/div/div[2]/main/div/div/div/section[2]/div[2]/div[4]/button'
+CHANGE_USERNAME_ATTRIBUTE = '[name="typedScreenName"]'
+CHANGE_NAME_ATTRIBUTE = '[name="displayName"]'
+CHANGE_BIO_ATTRIBUTE = '[name="description"]'
+CHANGE_LOCATION_ATTRIBUTE = '[name="location"]'
+SAVE_PROFILE_BUTTON_ATTRIBUTE = '[data-testid="Profile_Save_Button"]'
+CHANGE_PICTURE_ATTRIBUTE = "input[data-testid='fileInput']"
+CONFIRM_NEW_PICTURE_ATTRIBUTE = '[data-testid="applyButton"]'
+PRIVATE_ACCOUNT_BUTTON_ATTRIBUTE = 'xpath=//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[2]/div[2]/div/div/label'
+PRIVATE_ACCOUNT_BUTTON_OBJ = 'xpath=//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div/div[1]/div/div[2]/div[1]/div/div/div[1]/div/div/span/span[2]/span/span/div/button'
+CHOOSE_LANGUAGE_INPUT_ATTRIBUTE = '[data-testid="ChoiceSelectionInput"]'
+CHANGE_LANGUAGE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[3]/div[1]/label/div/div[1]'
+CURRENT_LANGUAGE_ATTRIBUTE = 'xpath=//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div[1]/label/div/div[1]'
+SUBMIT_NEW_LANGUAGE_ATTRIBUTE = '[data-testid="ChoiceSelectionNextButton"]'
 # Variable
 
 WAIT_TIME_BEFORE_TIMEOUT = 1

@@ -34,7 +34,13 @@ class TwitterBot():
         with open("configuration.yml", "r",encoding="utf-8") as file:
             self.data2 = yaml.load(file, Loader=yaml.FullLoader)
         
+        current_directory = os.getcwd()
+        currentDir = current_directory.split("\\")[-1]
+        
+        
         self.username = self.data2["account_username"][0]
+        if len(self.username) < 3:
+            self.username = currentDir
         self.password = self.data2["account_password"][0]
         self.today_date = datetime.now().date()
 
@@ -43,8 +49,6 @@ class TwitterBot():
         
         self.otp_accounts = print_file_content("../../otp_acc.txt").lower().replace("\t"," ").strip().split("\n")
         self.list_of_account_you_follow = print_file_content("list_of_account_you_follow.txt").lower().split("\n")
-        current_directory = os.getcwd()
-        currentDir = current_directory.split("\\")[-1]
         self.print_error = False
 
         self.otp_acc = False
@@ -392,7 +396,11 @@ class TwitterBot():
             self.page.locator(OTP_CODE_TEXTBOX_ATTRIBUTE).click()
             time.sleep(randint(1,5))
             print("otp code " , generate_totp(code.upper()))
-            self.page.locator(OTP_CODE_TEXTBOX_ATTRIBUTE).fill(generate_totp(code.upper()))
+            try:
+                self.page.locator(OTP_CODE_TEXTBOX_ATTRIBUTE).fill(generate_totp(code.upper()))
+            except:
+                self.page.keyboard.type(generate_totp(code.upper()))
+            
             self.random_stop()
             return True
             # try:

@@ -34,7 +34,13 @@ class TwitterBot():
         with open("configuration.yml", "r",encoding="utf-8") as file:
             self.data2 = yaml.load(file, Loader=yaml.FullLoader)
         
+        current_directory = os.getcwd()
+        currentDir = current_directory.split("\\")[-1]
+        
+        
         self.username = self.data2["account_username"][0]
+        if len(self.username) < 3:
+            self.username = currentDir
         self.password = self.data2["account_password"][0]
         self.today_date = datetime.now().date()
 
@@ -43,8 +49,6 @@ class TwitterBot():
         
         self.otp_accounts = print_file_content("../../otp_acc.txt").lower().replace("\t"," ").strip().split("\n")
         self.list_of_account_you_follow = print_file_content("list_of_account_you_follow.txt").lower().split("\n")
-        current_directory = os.getcwd()
-        currentDir = current_directory.split("\\")[-1]
         self.print_error = False
 
         self.otp_acc = False
@@ -140,9 +144,11 @@ class TwitterBot():
             
             return False
 
-    def retweet_a_tweet(self,url,load_page=True,print_error=False) -> bool:
+    def retweet_a_tweet(self,url,load_page=True,print_error=False,random_rt=False) -> bool:
         """A function to retweet a tweet"""
         try:
+            if random_rt and url.lower() in print_file_content("random_rt_done.txt").lower().split("\n"):
+                return True
             if load_page:
                 self.page.goto(url)
             self.page.locator(RETWEET_A_TWEET_ATTRIBUTE).click()
@@ -390,7 +396,11 @@ class TwitterBot():
             self.page.locator(OTP_CODE_TEXTBOX_ATTRIBUTE).click()
             time.sleep(randint(1,5))
             print("otp code " , generate_totp(code.upper()))
-            self.page.locator(OTP_CODE_TEXTBOX_ATTRIBUTE).fill(generate_totp(code.upper()))
+            try:
+                self.page.locator(OTP_CODE_TEXTBOX_ATTRIBUTE).fill(generate_totp(code.upper()))
+            except:
+                self.page.keyboard.type(generate_totp(code.upper()))
+            
             self.random_stop()
             return True
             # try:
@@ -774,6 +784,10 @@ class TwitterBot():
                         self.random_stop()
                         done_giveaway.append(giv)
 
+
+
+        write_into_file("../../list_of_all_run.txt",f"{self.username} {date_today}")
+                
         if len(list_of_account_to_follow) == 0 and len(done_giveaway) == 0:
             print("No giveaway found bye")
             self.browser.close()
@@ -955,7 +969,7 @@ class TwitterBot():
     
         for i , random_rt in enumerate(list_of_random_rt_tweet):
             if random_rt.lower() not in random_rt_done and random_rt not in rt_done_list:
-                if self.retweet_a_tweet(random_rt):
+                if self.retweet_a_tweet(random_rt,True,False,True):
                     write_into_file("random_rt_done.txt",random_rt.lower()+"\n")
                     print(f"Random retweet done {i + 1}/{len(list_of_random_rt_tweet)} {random_rt}")
                     rt_done_list.append(random_rt)
