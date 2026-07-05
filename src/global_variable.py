@@ -7,6 +7,7 @@
 TWITTER_LOGIN_PAGE_URL = "https://x.com"
 TWEET_TO_SEE_AFTER_LOGIN = "https://x.com/Holtadjust/status/2063281449898274862"
 DM_PAGE = "https://x.com/i/chat"
+GROOK_PAGE = "https://x.com/i/grok"
 
 # ---
 CHANGE_PASSWORD_PAGE = "https://x.com/settings/password"
@@ -39,6 +40,7 @@ MAKE_A_POST_ATTRIBUTE = '[data-testid="SideNav_NewTweet_Button"]'
 FORGOT_PIN_ATTRIBUTE = '[data-testid="pin-forgot-pin"]'
 CREATE_A_PASSCODE_ATTRIBUTE = '[data-testid="pin-onboarding-setup-now"]'
 CODEPASS_TEXTBOX_ATTRIBUTE = '[data-testid="pin-code-input-container"]'
+
 CODEPASS_BUTTON_ATTRIBUTE_LIST = [
     'xpath=//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div[1]'
     'xpath=//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div[2]',
@@ -50,6 +52,7 @@ OTP_CODE_TEXTBOX_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[2]/div/div/div/div/div
 #UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button/div'
 UNLOCK_MORE_BUTTON_ATTRIBUTE = 'xpath=//*[@id="layers"]/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/button'
 COMMENT_A_POST_ATTRIBUTE = "input[data-testid='fileInput']"
+EMPTY_DM_ATTRIBUTE = '[data-testid="dm-empty-inbox-title"]'
 
 
 # ---

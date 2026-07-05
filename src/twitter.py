@@ -1,10 +1,12 @@
 """Twitter bot file"""
 from datetime import datetime
+from PIL import Image
 from random import randint
 from random import shuffle
 
 import json
 import os
+import pytesseract
 import time
 import traceback
 import yaml
@@ -12,6 +14,8 @@ import yaml
 from cloakbrowser import launch_persistent_context
 from global_variable import *
 from utility_function import *
+
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 
 # Undifined Variable
@@ -144,6 +148,25 @@ class TwitterBot():
             
             return False
 
+    def check_if_a_tweet_is_liked(self,url) -> bool:
+        """A function to check if you have already liked a tweet"""
+        try:
+            #self.page.goto(url)
+            time.sleep(randint(2,5))
+            self.page.locator(UNLIKE_A_TWEET_ATTRIBUTE).wait_for(timeout=3000)
+            #self.random_stop()
+            time.sleep(randint(1,3))
+            return True
+        except Exception as e:
+            if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
+                time.sleep(60 * 15)
+                self.check_if_a_tweet_is_liked(url)
+
+            if self.print_error:
+                traceback.print_exc()
+            
+            return False
+
     def retweet_a_tweet(self,url,load_page=True,print_error=False,random_rt=False) -> bool:
         """A function to retweet a tweet"""
         try:
@@ -196,7 +219,7 @@ class TwitterBot():
     def comment_a_tweet(self,url,text,load_page=True,print_error=False) -> bool:
         """A function to comment a tweet"""
         try:
-            if url.lower() in print_file_content("giveaway_done.txt").lower().split("\n"):
+            if url.lower() in print_file_content("comment_done.txt").lower().split("\n"):
                 return True
             if len(text) == 0:
                 return True
@@ -209,6 +232,7 @@ class TwitterBot():
             self.page.locator(POST_A_TWEET_BUTTON_ATTRIBUTE).click()
             #self.random_stop()
             time.sleep(randint(10,15))
+            write_into_file("comment_done.txt",url.lower()+"\n")
             return True
 
         except Exception as e:
@@ -368,10 +392,16 @@ class TwitterBot():
             time.sleep(randint(1,5))
 
             self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+            self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+            self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+            
             time.sleep(randint(1,5))
 
             try:
                 self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+                self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+                self.page.locator(CODEPASS_TEXTBOX_ATTRIBUTE).fill("2001")
+                
             except:
                 pass
 
@@ -418,35 +448,57 @@ class TwitterBot():
             
             return False
 
-    def is_passcode_for_dm_needed(self)  -> bool:
+    def is_passcode_for_dm_needed(self)  -> int:
         """A function that check if passcode for dm is needed"""
         try:
             self.page.goto(DM_PAGE)
             time.sleep(randint(1,5))
-            self.page.locator(FORGOT_PIN_ATTRIBUTE).wait_for(timeout=5000)
-            return True
+            try:
+                self.page.locator(FORGOT_PIN_ATTRIBUTE).wait_for(timeout=5000)
+                return 1
+            except:
+                pass
+
+            self.page.locator(CREATE_A_PASSCODE_ATTRIBUTE).wait_for(timeout=5000)
+            return 2
         except Exception as e:
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
                 time.sleep(60 * 15)
                 self.is_passcode_for_dm_needed()
-            return False
+            return 0
 
     def check_dm(self)  -> None:
         """A function that will check if an user has recieved a new dm"""
         try:
             try:
-                self.page.locator(NEW_DM_ATTRIBUTE).wait_for(timeout=5000)
-                if self.is_passcode_for_dm_needed():
+                x = self.is_passcode_for_dm_needed()
+                if x == 1:
                     self.setup_passcode(True)
+                elif x == 2:
+                    self.setup_passcode(False)
                 else:
                     self.page.goto(DM_PAGE)
+                #self.page.locator('xpath=//*[@id="dm-conversation-option-265760745:2174096791"]/div/div[2]/div[2]/div[2]').wait_for(timeout=5000)
+                time.sleep(5)
 
-                time.sleep(15)
+                try:
+                    self.page.locator(EMPTY_DM_ATTRIBUTE).wait_for(timeout=5000)
+                    return None
+                except:
+                    pass
                 self.page.screenshot(path="screenshot.png")
-                
-                send_message_discord_with_pic(f"{self.username} got a new DM check it out!",self.discord_dict["new_dm_channel"])
+                img = Image.open("screenshot.png")
+                text = pytesseract.image_to_string(img)
+                latest_dm_text = print_file_content("latest_dm_text.txt")
+                print("text text " , text)
+                if latest_dm_text.lower() != text.lower():
+                    reset_file("latest_dm_text.txt")
+                    write_into_file("latest_dm_text.txt",latest_dm_text)
+                    send_message_discord_with_pic(f"{self.username} got a new DM check it out!",self.discord_dict["new_dm_channel"])
                 time.sleep(3)
             except:
+                traceback.print_exc()
+                print("Check dm error")
                 return None
         except Exception as e:
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
@@ -684,11 +736,10 @@ class TwitterBot():
                 write_into_file("all_run.txt",date_today+"\n")
 
             else:
-                if max_retry != 1 and len(print_file_content("giveaway_done.txt").lower().split("\n")) != 0:
+                if max_retry != 1 and len(print_file_content("giveaway_done.txt").lower().split("\n")) > 1:
                     print("Account already run not long time ago")
                     return True
                 
-            
         else:
             first_time = True
             reset_file("last_run.txt")
@@ -744,7 +795,8 @@ class TwitterBot():
 
         time.sleep(10)
         self.page.goto(TWEET_TO_SEE_AFTER_LOGIN)
-        
+        time.sleep(1)
+        self.page.goto(GROOK_PAGE)
         time.sleep(10)
         
         if first_time:
@@ -795,7 +847,7 @@ class TwitterBot():
 
         # FOLLOW ALL YOUR ACCOUNT
         try:
-            if len(print_file_content("giveaway_done.txt").lower().split("\n")) >= 0:
+            if len(print_file_content("giveaway_done.txt").lower().split("\n")) >= 10:
                 your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
                 for i , account in enumerate(your_account_to_follow):
                     if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username or account.lower() in self.list_of_account_you_follow:
@@ -875,6 +927,13 @@ class TwitterBot():
                     if like is False:
                         like = self.like_a_tweet(giveaway,False)
 
+                    try:
+                        is_liked = self.check_if_a_tweet_is_liked(giveaway)
+                        if is_liked is False:
+                            time.sleep(randint(1,10))
+                            self.like_a_tweet(giveaway,False)
+                    except:
+                        print("is_liked error " , giveaway)
 
                     retweet = self.retweet_a_tweet(giveaway,False)
                     if retweet is False:
