@@ -46,6 +46,13 @@ class TwitterBot():
         if len(self.username) < 3:
             self.username = currentDir
         self.password = self.data2["account_password"][0]
+        try:
+            self.rt_theme = self.data2["theme"][0]
+            print(self.data2["theme"][0])
+        except:
+            self.rt_theme = "general"
+
+        print(f"Random RT theme: {self.rt_theme}")
         self.today_date = datetime.now().date()
 
         self.browser = launch_persistent_context(user_data_dir=f"./{self.username}",geoip=True,headless=False,humanize=True)
@@ -172,6 +179,9 @@ class TwitterBot():
         try:
             if random_rt and url.lower() in print_file_content("random_rt_done.txt").lower().split("\n"):
                 return True
+            if random_rt and url.lower() in print_file_content("giveaway_done.txt").lower().split("\n"):
+                return True
+            
             if load_page:
                 self.page.goto(url)
             self.page.locator(RETWEET_A_TWEET_ATTRIBUTE).click()
@@ -219,6 +229,41 @@ class TwitterBot():
     def comment_a_tweet(self,url,text,load_page=True,print_error=False) -> bool:
         """A function to comment a tweet"""
         try:
+
+            rdm_games = [
+                "Red Dead Redemption 2, GTA V, Call of Duty Black Ops 2",
+                "Minecraft, GTA San Andreas, Call of Duty Modern Warfare 2",
+                "The Last of Us, Red Dead Redemption 2, God of War",
+                "GTA V, Minecraft, Fortnite",
+                "Red Dead Redemption 2, Cyberpunk 2077, Elden Ring",
+                "Call of Duty Black Ops 6, GTA V, Hitman 3",
+                "The Witcher 3, Skyrim, Red Dead Redemption 2",
+                "Grand Theft Auto San Andreas, Minecraft, Call of Duty Black Ops",
+                "Elden Ring, Dark Souls 3, Bloodborne",
+                "Zelda Breath of the Wild, Mario Odyssey, Minecraft",
+                "Red Dead Redemption 2, The Last of Us Part II, GTA V",
+                "Call of Duty Modern Warfare 2, GTA IV, Minecraft",
+                "Cyberpunk 2077, The Witcher 3, Fallout 4",
+                "God of War Ragnarok, Spider-Man 2, Horizon Forbidden West",
+                "Hitman 3, Control, Red Dead Redemption 2",
+                "Dragon Ball Sparking Zero, GTA V, Call of Duty BO6",
+                "FIFA 25, GTA V, Call of Duty",
+                "Assassin's Creed II, GTA San Andreas, Skyrim",
+                "Minecraft, Terraria, Stardew Valley",
+                "Resident Evil 4, Silent Hill 2, The Last of Us",
+                "Red Dead Redemption 2, GTA V, Fortnite",
+                "Call of Duty Black Ops 2, Minecraft, GTA V",
+                "Death Stranding, Cyberpunk 2077, Elden Ring",
+                "Hollow Knight, Celeste, Ori and the Will of the Wisps",
+                "Portal 2, Half Life 2, Minecraft",
+                "Super Mario Galaxy, Zelda Ocarina of Time, Mario Kart",
+                "League of Legends, Valorant, Counter Strike 2",
+                "Rocket League, Fortnite, Minecraft",
+                "Monster Hunter World, Elden Ring, Dark Souls",
+                "Control, Hitman 3, Red Dead Redemption 2"
+                ]
+            if url.lower() == "https://x.com/kayane/status/2071981940324913256":
+                text = rdm_games[randint(0,len(rdm_games) - 1)]
             if url.lower() in print_file_content("comment_done.txt").lower().split("\n"):
                 return True
             if len(text) == 0:
@@ -370,7 +415,6 @@ class TwitterBot():
             time.sleep(randint(1,5))
             return True
         except Exception as e:
-            traceback.print_exc()
             
             if "Page.goto: net::ERR_INTERNET_DISCONNECTED " in str(e):
                 time.sleep(60 * 15)
@@ -490,7 +534,7 @@ class TwitterBot():
                 img = Image.open("screenshot.png")
                 text = pytesseract.image_to_string(img)
                 latest_dm_text = print_file_content("latest_dm_text.txt")
-                print("text text " , text)
+                #print("text text " , text)
                 if latest_dm_text.lower() != text.lower():
                     reset_file("latest_dm_text.txt")
                     write_into_file("latest_dm_text.txt",latest_dm_text)
@@ -795,8 +839,6 @@ class TwitterBot():
 
         time.sleep(10)
         self.page.goto(TWEET_TO_SEE_AFTER_LOGIN)
-        time.sleep(1)
-        self.page.goto(GROOK_PAGE)
         time.sleep(10)
         
         if first_time:
@@ -935,9 +977,9 @@ class TwitterBot():
                     except:
                         print("is_liked error " , giveaway)
 
-                    retweet = self.retweet_a_tweet(giveaway,False)
+                    retweet = self.retweet_a_tweet(giveaway,False,False,True)
                     if retweet is False:
-                        retweet = self.retweet_a_tweet(giveaway,True,False)
+                        retweet = self.retweet_a_tweet(giveaway,True,False,True)
 
                     comment = True
                     comment = self.comment_a_tweet_with_a_picture(giveaway,"#CdiscountSoldes " , random_picture,True,False)
@@ -961,9 +1003,9 @@ class TwitterBot():
                     like = self.like_a_tweet(giveaway,False)
 
 
-                retweet = self.retweet_a_tweet(giveaway,False)
+                retweet = self.retweet_a_tweet(giveaway,False,False,True)
                 if retweet is False:
-                    retweet = self.retweet_a_tweet(giveaway,True,False)
+                    retweet = self.retweet_a_tweet(giveaway,True,False,True)
 
                 comment = True
                 if need_to_comment_or_not[shuffle_list[i]]:
@@ -1004,8 +1046,13 @@ class TwitterBot():
         for random_rt in all_random_rt:
             split_random_rt = random_rt.split(" ")
             if len(split_random_rt[0]) > 1:
-                list_of_random_rt_tweet.append(split_random_rt[0])
-
+                try:
+                    print(f"test rdm rt {split_random_rt[2].lower()} {len(split_random_rt[2].lower())} {self.rt_theme} {len(self.rt_theme)}")
+                    if split_random_rt[2].lower() == self.rt_theme.lower():
+                        list_of_random_rt_tweet.append(split_random_rt[0])
+                except:
+                    list_of_random_rt_tweet.append(split_random_rt[0])
+        
         shuffle(list_of_random_rt_tweet)
 
         check_login = self.is_login_good()
@@ -1025,6 +1072,9 @@ class TwitterBot():
             nb = randint(20,30)
             if nb < len(list_of_random_rt_tweet):
                 list_of_random_rt_tweet = list_of_random_rt_tweet[0:nb]
+        
+        if len(list_of_random_rt_tweet) > 40:
+            list_of_random_rt_tweet = list_of_random_rt_tweet[0:39]
     
         for i , random_rt in enumerate(list_of_random_rt_tweet):
             if random_rt.lower() not in random_rt_done and random_rt not in rt_done_list:
