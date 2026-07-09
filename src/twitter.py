@@ -867,14 +867,26 @@ class TwitterBot():
 
         if len(today_giveaway) > 0:
             for giv in today_giveaway:
-                print(f"Giveaway to redo today: {giv}")
                 if giv not in bad_giveaway:
                     if giv in giveaway_done:
+                        print(f"Giveaway to redo today: {giv}")
                         self.unlike_a_tweet(giv)
                         self.unretweet_a_tweet(giv,True)
                         self.random_stop()
                         self.like_a_tweet(giv)
                         self.retweet_a_tweet(giv,True)
+                        
+                        try:
+                            is_liked = self.check_if_a_tweet_is_liked(giv)
+                            print(f"Is liked status {is_liked}")
+                            if is_liked is False:
+                                time.sleep(randint(1,10))
+                                self.like_a_tweet(giv,False)
+                                self.retweet_a_tweet(giv,True)
+                                self.random_stop()
+                        except:
+                            print("is_liked error " , giv)
+
                         self.random_stop()
                         done_giveaway.append(giv)
 
@@ -955,6 +967,12 @@ class TwitterBot():
         giveaway_nb = 0
         
 
+
+        # CUSTOM GIVEAWAY
+
+        self.like_a_tweet("https://x.com/Kawajnr/status/2074220587287789796")
+        self.retweet_a_tweet("https://x.com/Kawajnr/status/2074220587287789796")
+        self.follow_an_account("Kawajnr")
         comment_a_post_with_piture = False
         list_of_pic_giveaway = [
         ]
@@ -971,6 +989,7 @@ class TwitterBot():
 
                     try:
                         is_liked = self.check_if_a_tweet_is_liked(giveaway)
+                        print(f"Is liked status {is_liked}")
                         if is_liked is False:
                             time.sleep(randint(1,10))
                             self.like_a_tweet(giveaway,False)
@@ -1054,7 +1073,7 @@ class TwitterBot():
                     list_of_random_rt_tweet.append(split_random_rt[0])
         
         shuffle(list_of_random_rt_tweet)
-
+        list_of_random_rt_tweet = list(set(list_of_random_rt_tweet))
         check_login = self.is_login_good()
         time.sleep(randint(20,40))
         if check_login == False:

@@ -31,7 +31,7 @@ import json
 
 with open("../../configuration.yml", "r") as file:
     data = yaml.load(file, Loader=yaml.FullLoader)
-    
+ 
 
 class Scraper:
     
@@ -253,17 +253,46 @@ def main_one():
 
 
 
-    time.sleep(120)
+    if skip_giveaway is False:
+        time.sleep(120)
     skip_random_rt = False
-    if skip_random_rt == False and data["random_retweet_and_tweet"]:
+    reset_file("../txt_files_folder/recent_random_rt.txt")
+    try:
+        
+        rt_already_in = []
+        with open("../../random_rt_theme.yml", "r") as file:
+            random_rt_theme_data = yaml.load(file, Loader=yaml.FullLoader)
+
+        list_of_theme = ["general","foot","music"]
+        list_of_theme_yml = [
+            random_rt_theme_data["general_rt"],
+            random_rt_theme_data["foot_rt"],
+            random_rt_theme_data["music_rt"]
+        ]
         today_date = datetime.now().strftime("%Y:%m:%d")
-        rt_url = search_tweet_for_better_rt(S)
+        for theme , yml_theme in zip(list_of_theme,list_of_theme_yml):
+            rt_url = search_tweet_for_better_rt(S,yml_theme)
+            for random_rt in rt_url:
+                if f"{random_rt} {theme}" not in rt_already_in:
+                    
+                    
+                    write_into_file("../txt_files_folder/all_random_rt.txt",f"{random_rt} {today_date}"+"\n")
+                    #write_into_file("../txt_files_folder/all_random_rt_theme.txt",f"{random_rt} {today_date} {theme}"+"\n")
+                    write_into_file("../txt_files_folder/recent_random_rt.txt",f"{random_rt} {today_date} {theme}"+"\n")
+                    rt_already_in.append(f"{random_rt} {theme}")    
+        
+        
+    
+    except:
+        if skip_random_rt == False and data["random_retweet_and_tweet"]:
+            today_date = datetime.now().strftime("%Y:%m:%d")
+            rt_url = search_tweet_for_better_rt(S)
 
 
-        reset_file("../txt_files_folder/recent_random_rt.txt")
-        for random_rt in rt_url:
-            write_into_file("../txt_files_folder/all_random_rt.txt",f"{random_rt} {today_date}"+"\n")
-            write_into_file("../txt_files_folder/recent_random_rt.txt",f"{random_rt} {today_date}"+"\n")
+            reset_file("../txt_files_folder/recent_random_rt.txt")
+            for random_rt in rt_url:
+                write_into_file("../txt_files_folder/all_random_rt.txt",f"{random_rt} {today_date}"+"\n")
+                write_into_file("../txt_files_folder/recent_random_rt.txt",f"{random_rt} {today_date}"+"\n")
         
     print("End of the program")
 
