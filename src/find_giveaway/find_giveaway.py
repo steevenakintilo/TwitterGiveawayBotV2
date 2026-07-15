@@ -249,7 +249,7 @@ def main_one():
         t_comment_or_not , t_full_comment, blabla = giweaway_from_url_file(tweet_txt,crash_follow,S)
         
         for comment_or_not , full_comment in zip(t_comment_or_not,t_full_comment):
-            write_into_file("../txt_files_folder/all_comment.txt",f"{comment_or_not}##@@##{full_comment}##@@##{today_date}"+"\n")
+            write_into_file("../txt_files_folder/all_comment.txt",f"{comment_or_not}##@@##{full_comment.replace("\n"," ")}##@@##{today_date}"+"\n")
 
 
 
@@ -263,11 +263,12 @@ def main_one():
         with open("../../random_rt_theme.yml", "r") as file:
             random_rt_theme_data = yaml.load(file, Loader=yaml.FullLoader)
 
-        list_of_theme = ["general","foot","music"]
+        list_of_theme = ["general","foot","music","video_game"]
         list_of_theme_yml = [
             random_rt_theme_data["general_rt"],
             random_rt_theme_data["foot_rt"],
-            random_rt_theme_data["music_rt"]
+            random_rt_theme_data["music_rt"],
+            random_rt_theme_data["video_game_rt"]
         ]
         today_date = datetime.now().strftime("%Y:%m:%d")
         for theme , yml_theme in zip(list_of_theme,list_of_theme_yml):

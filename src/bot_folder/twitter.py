@@ -537,7 +537,7 @@ class TwitterBot():
                 #print("text text " , text)
                 if latest_dm_text.lower() != text.lower():
                     reset_file("latest_dm_text.txt")
-                    write_into_file("latest_dm_text.txt",latest_dm_text)
+                    write_into_file("latest_dm_text.txt",text)
                     send_message_discord_with_pic(f"{self.username} got a new DM check it out!",self.discord_dict["new_dm_channel"])
                 time.sleep(3)
             except:
@@ -755,7 +755,12 @@ class TwitterBot():
         # write_into_file("last_run.txt",dateT)
         # write_into_file("all_run.txt",dateT+"\n")
 
-        
+
+
+        if self.username.lower() in print_file_content("../../skip_account.txt").lower():
+            self.browser.close()
+            return True
+
         last_run = print_file_content("last_run.txt")
         all_run = print_file_content("all_run.txt")
         date_today = datetime.now().strftime("%d/%m/%Y")
@@ -875,7 +880,7 @@ class TwitterBot():
                         self.random_stop()
                         self.like_a_tweet(giv)
                         self.retweet_a_tweet(giv,True)
-
+                        
                         try:
                             is_liked = self.check_if_a_tweet_is_liked(giv)
                             print(f"Is liked status {is_liked}")
@@ -892,7 +897,7 @@ class TwitterBot():
 
 
 
-        write_into_file("../../list_of_all_run.txt",f"{self.username} {date_today}")
+        write_into_file("../../list_of_all_run.txt",f"{self.username} {date_today}\n")
                 
         if len(list_of_account_to_follow) == 0 and len(done_giveaway) == 0:
             print("No giveaway found bye")
@@ -901,13 +906,14 @@ class TwitterBot():
 
         # FOLLOW ALL YOUR ACCOUNT
         try:
+            ok_acc = 1
             if len(print_file_content("giveaway_done.txt").lower().split("\n")) >= 10:
                 your_account_to_follow = print_file_content("../../all_acc.txt").split("\n")
                 for i , account in enumerate(your_account_to_follow):
                     if account.lower() in print_file_content("../txt_files_folder/ban_account.txt").lower() or account.lower() == self.username or account.lower() in self.list_of_account_you_follow:
                         continue
-                    print(f"Your own account {account} {i + 1}/{len(your_account_to_follow)}")
-                    
+                    print(f"Your own account {account} {i + 1}/{len(your_account_to_follow)} {ok_acc}")
+                    ok_acc+=1
                     follow = self.follow_an_account(account,False)
                     if follow is False:
                         self.follow_an_account(account,False)
@@ -970,9 +976,10 @@ class TwitterBot():
 
         # CUSTOM GIVEAWAY
 
-        self.like_a_tweet("https://x.com/Kawajnr/status/2074220587287789796")
-        self.retweet_a_tweet("https://x.com/Kawajnr/status/2074220587287789796")
-        self.follow_an_account("Kawajnr")
+        # self.like_a_tweet("https://x.com/Kawajnr/status/2074220587287789796")
+        # self.retweet_a_tweet("https://x.com/Kawajnr/status/2074220587287789796")
+        # self.follow_an_account("Kawajnr")
+        
         comment_a_post_with_piture = False
         list_of_pic_giveaway = [
         ]
