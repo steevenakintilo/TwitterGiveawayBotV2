@@ -71,7 +71,9 @@ class bot_launcher():
 
     def start(self) -> None:
         """A function that will start all the bot"""
+        self.reset_file("run.txt")
         os.system("pip install --upgrade cloakbrowser")
+        os.system("pip install cloakbrowser[geoip]")
         start = time.time()
         folder_to_skip = [
             "bot_folder",
@@ -93,6 +95,7 @@ class bot_launcher():
         if search_giveaway:
             os.system("cd src/find_giveaway && python find_giveaway.py")
 
+        self.write_into_file("run.txt","1")
         empty_space = "‎"
         self.send_message_discord(f"{empty_space}\n"*3,self.discord_dict["list_of_account_time_statistics"])
 
@@ -131,8 +134,11 @@ class bot_launcher():
             traceback.print_exc()
 
         self.reset_file("list_of_giveaway_done_today.txt")
-        if self.data["search_for_win"]:
-            os.system("cd src/check_for_win_bot && python main.py")
-
+        try:
+            if self.data["search_for_win"]:
+                os.system("cd src/check_for_win_bot && python main.py")
+        except:
+            pass
+        
         print(f"It took {hours} hours, {minutes} minutes, and {remaining_seconds} seconds.")
         self.send_message_discord(f"It took {hours} hours, {minutes} minutes, and {remaining_seconds} seconds.",self.discord_dict["list_of_account_time_statistics"])
